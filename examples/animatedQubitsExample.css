@@ -1,0 +1,13 @@
+.animatedQubitsAmplitudeCircle {
+    fill: hsla(195, 53%, 60%, 0.5);
+}
+
+.animatedQubitsPhaseArrow {
+    stroke: red;
+    stroke-width: 2px;
+}
+
+.animatedQubitsPhaseArrowEnd {
+    fill: red;
+}
+

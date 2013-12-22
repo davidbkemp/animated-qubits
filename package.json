@@ -1,0 +1,31 @@
+{
+  "author": "David Kemp <davidbkemp@gmail.com> (https://github.com/davidbkemp)",
+  "name": "animated-qubits",
+  "description": "Library to support the animation of quantum computation.",
+  "version": "0.0.0",
+  "repository": {
+    "url": ""
+  },
+  "main": "index",
+  "scripts": {
+    "test": "jshint --config jshintConfig.json animatedQubits.js lib spec examples/simpleImports/js examples/usingRequire/js && jasmine-node spec",
+    "specOnly": "jasmine-node spec",
+    "build": "r.js -o build.js",
+    "clean": "rm -rf app; rm -rf node_modules; find . -name bower_components -exec rm -r {} \\;"
+  },
+  "dependencies": {
+    "jsqubits": "0.1.x",
+    "requirejs": "2.1.x",
+    "d3": "3.3.x",
+    "d3-transform": "1.0.x",
+    "d3-measure-text": "0.0.x",
+    "q": "0.9.x",
+    "lodash": "~2.3.x"
+  },
+  "devDependencies": {
+    "jasmine-node": "1.11.x",
+    "jshint": "2.1.x",
+    "mockery": "1.4.x"
+  },
+  "optionalDependencies": {}
+}
