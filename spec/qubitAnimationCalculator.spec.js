@@ -126,13 +126,13 @@ describe("qubitAnimationRenderer", function () {
             expect(phase2b['k2-1'].amplitude.format({decimalPlaces: 2})).toEqual('0.35+0.35i');
             expect(phase2b['k2-2'].amplitude.format({decimalPlaces: 2})).toEqual('-0.35-0.35i');
             
-            expect(phase2b['k1-1'].x).toBe(maxRadius);
+            expect(phase2b['k1-1'].x).toBe(2 * maxRadius);
             expect(phase2b['k1-1'].y).toBe(maxRadius);
-            expect(phase2b['k1-2'].x).toBe(maxRadius);
+            expect(phase2b['k1-2'].x).toBe(2 * maxRadius);
             expect(phase2b['k1-2'].y).toBe(maxRadius * (1 + 2 * Math.SQRT2));
-            expect(phase2b['k2-1'].x).toBe(maxRadius);
+            expect(phase2b['k2-1'].x).toBe(2 * maxRadius);
             expect(phase2b['k2-1'].y).toBe(maxRadius * (1 + Math.SQRT2));
-            expect(phase2b['k2-2'].x).toBe(maxRadius);
+            expect(phase2b['k2-2'].x).toBe(2 * maxRadius);
             expect(phase2b['k2-2'].y).toBe(maxRadius * (1 + 3 * Math.SQRT2));
         });
 
@@ -179,13 +179,13 @@ describe("qubitAnimationRenderer", function () {
             expect(phase2b['k2-1'].amplitude.format({decimalPlaces: 2})).toEqual('0.35+0.35i');
             expect(phase2b['k2-2'].amplitude.format({decimalPlaces: 2})).toEqual('-0.35-0.35i');
 
-            expect(phase2b['k1-1'].x).toBe(maxRadius);
+            expect(phase2b['k1-1'].x).toBe(2 * maxRadius);
             expect(phase2b['k1-1'].y).toBe(maxRadius * (1 + 2 * Math.SQRT2));
-            expect(phase2b['k1-2'].x).toBe(maxRadius);
+            expect(phase2b['k1-2'].x).toBe(2 * maxRadius);
             expect(phase2b['k1-2'].y).toBe(maxRadius * (1 + 3 * Math.SQRT2));
-            expect(phase2b['k2-1'].x).toBe(maxRadius * 1.5);
+            expect(phase2b['k2-1'].x).toBe(maxRadius * 2.5);
             expect(phase2b['k2-1'].y).toBe(maxRadius * (1 + 2 * Math.SQRT2));
-            expect(phase2b['k2-2'].x).toBe(maxRadius * 1.5);
+            expect(phase2b['k2-2'].x).toBe(maxRadius * 2.5);
             expect(phase2b['k2-2'].y).toBe(maxRadius * (1 + 3 * Math.SQRT2));
         });
 
@@ -204,9 +204,9 @@ describe("qubitAnimationRenderer", function () {
             expect(k1_1.amplitude.format({decimalPlaces: 2})).toEqual('0.85+0.35i');
             expect(k1_2.amplitude.format({decimalPlaces: 2})).toEqual('0.15-0.35i');
 
-            expect(k1_1.x).toBe(maxRadius);
+            expect(k1_1.x).toBe(2 *maxRadius);
             expect(k1_1.y).toBe(maxRadius * (1 + 2 * Math.SQRT2));
-            expect(k1_2.x).toBe(maxRadius);
+            expect(k1_2.x).toBe(2 * maxRadius);
             expect(k1_2.y).toBe(maxRadius * (1 + 3 * Math.SQRT2));
 
         });
@@ -225,9 +225,9 @@ describe("qubitAnimationRenderer", function () {
             expect(k2_1.amplitude.phase()).toBe(phases.phase2b['k2-1'].amplitude.phase());
             expect(k2_2.amplitude.phase()).toBe(phases.phase2b['k2-2'].amplitude.phase());
 
-            expect(k2_1.x).toBeCloseTo(maxRadius * 1.8536, 2);
+            expect(k2_1.x).toBeCloseTo(maxRadius * 2.8536, 2);
             expect(k2_1.y).toBeCloseTo(maxRadius * ((1 - 0.3536) + 2 * Math.SQRT2), 2);
-            expect(k2_2.x).toBeCloseTo(maxRadius * 1.1464, 2);
+            expect(k2_2.x).toBeCloseTo(maxRadius * 2.1464, 2);
             expect(k2_2.y).toBeCloseTo(maxRadius * ((1 + 0.3536) + 3 * Math.SQRT2), 2);
         });
 
