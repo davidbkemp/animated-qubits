@@ -69,18 +69,26 @@
             
             var applyOperation = function (operation, options) {
                 var phases = calculator.createPhases(stateComponents, operation),
-                    newStateComponents = phases.phase1.map(_.clone);
-                qstate = operation(qstate);
+                    newStateComponents = phases.phase1.map(_.clone),
+                    newQState = operation(qstate),
+                    phase5Promise;
+
+                qstate = newQState;
                 stateComponents = calculator.augmentState(qstate);
+                
                 if (options && options.skipInterferenceSteps) {
-                    return phase1(newStateComponents).then(phase5(phases));
+                    phase5Promise = phase1(newStateComponents).then(phase5(phases));
                 } else {
-                    return phase1(newStateComponents)
+                    phase5Promise = phase1(newStateComponents)
                         .then(phase2(phases, newStateComponents))
                         .then(phase3(phases))
                         .then(phase4(phases))
                         .then(phase5(phases));
                 }
+                
+                return phase5Promise.then(function returnNewQState() {
+                    return newQState;
+                });
             };
 
             return {

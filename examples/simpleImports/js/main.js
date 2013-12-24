@@ -5,13 +5,19 @@
 
 function applyOperation(operation, options) {
     animation.applyOperation(operation, options)
+        .then(function displayNewQstate(qstate) {
+            document.getElementById("qstate").innerText = qstate.toString();
+        })
         .fail(function (msg) {
             if (console && console.log) console.log(msg);
             alert(msg);
         });
 }
 
-var animation = animatedQubits(jsqubits("|101>").hadamard(0).T(0), {maxRadius: 50});
+var qstate = jsqubits("|101>").hadamard(0).T(0);
+document.getElementById("qstate").innerText = qstate.toString();
+
+var animation = animatedQubits(qstate, {maxRadius: 50});
 
 animation.display(document.getElementById("svg"));
 

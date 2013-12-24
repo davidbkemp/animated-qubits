@@ -7,16 +7,15 @@ var mockery = require('mockery'),
     _ = require('lodash'),
     jsqubits = require('jsqubits').jsqubits;
 
-var createMockPromise = function () {
+var createMockPromise = function (promisedValue) {
+    
+    function then(f) {
+        var nextValue = f(promisedValue);
+        return nextValue && nextValue.then ? nextValue : createMockPromise(nextValue);
+    }
+
     return {
-        when: function (f) {
-            if (f) f();
-            return createMockPromise();
-        },
-        then: function (f) {
-            if (f) f();
-            return createMockPromise();
-        }
+        then: then
     };
 };
 
@@ -38,6 +37,13 @@ describe("animatedQubits", function () {
         config;
         
     beforeEach(function () {
+        mockQ = {
+            when: function (value) {
+                mockInitialPromise = (value && value.then) ? value : createMockPromise(value);
+                return mockInitialPromise;
+            }
+        };
+    
         config = {
             maxRadius: 21
         };
@@ -64,14 +70,6 @@ describe("animatedQubits", function () {
         mockCalculatorModule = function () {
             return mockCalculator;
         };
-
-        mockInitialPromise = createMockPromise();
-
-        mockQ = {
-            when: function () {}
-        };
-
-        spyOn(mockQ, 'when').andReturn(mockInitialPromise);
 
         mockery.enable({useCleanCache: true});
         mockery.registerAllowable('../animatedQubits');
@@ -210,12 +208,18 @@ describe("animatedQubits", function () {
         it("should wait for any exisiting operation to complete", function () {
             var nextPromise = createMockPromise();
             spyOn(mockInitialPromise, 'then').andReturn(nextPromise);
-            
+
             var returnValue = animation.applyOperation(operation, options);
             
-            expect(mockQ.when).toHaveBeenCalledWith();
             expect(mockInitialPromise.then).toHaveBeenCalled();
             expect(returnValue).toBe(nextPromise);
+        });
+        
+        it("should return a promise that provides the final state", function () {
+            var promise = animation.applyOperation(operation, options);
+            promise.then(function finalThen(actualReturnedState) {
+                expect(actualReturnedState).toBe(operationReturnState);
+            });
         });
         
         it("should create phases", function () {
