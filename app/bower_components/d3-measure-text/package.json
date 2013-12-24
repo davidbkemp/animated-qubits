@@ -1,0 +1,40 @@
+{
+  "name": "d3-measure-text",
+  "version": "0.0.2",
+  "keywords": [
+    "D3",
+    "D3.js",
+    "SVG",
+    "chart",
+    "graph",
+    "plot",
+    "browserify",
+    "browser",
+    "component",
+    "measure",
+    "text",
+    "height",
+    "width",
+    "measure"
+  ],
+  "author": "JP Richardson <jprichardson@gmail.com>",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": ""
+    }
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "testutil": "~0.6.0"
+  },
+  "main": "lib/d3-measure-text.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "url": "jprichardson/d3-measure-text",
+    "type": "git"
+  },
+  "description": "A JavaScript component to measure the the width and height of SVG text."
+}

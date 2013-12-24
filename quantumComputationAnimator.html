@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html data-ng-app='QuantumAnimation'>
+<head>
+<meta charset="utf-8">
+<title>Quantum Computation Animation using animated-qubits</title>
+
+<link rel="stylesheet" href="quantumAnimation.css" />
+</head>
+
+<body data-ng-controller='QuantumAnimationController'>
+<h1>Quantum Computation Animation</h1>
+<h2>
+    A crude demonstration of the
+    <a href="https://github.com/davidbkemp/animated-qubits">animated-qubits</a>
+    JavaScript library.
+</h2>
+
+<div>
+    Number of qubits:
+    <select data-ng-model='numBitsSelected' data-ng-change="onChangeNumBits()">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+    </select>
+</div>
+<div>
+    Operator:
+    <select name="operationId" data-ng-model='operationIndex'>
+        <option data-ng-repeat='operation in operations' ng-value="$index"
+            data-ng-bind='operation.name'>
+        </option>
+    </select>
+</div>
+<div>
+    Target bits:
+    <span data-ng-repeat='bitLabel in bitLabels'>
+        <input type="checkbox" id='target{{bitLabel}}'
+            data-ng-model='targetBits[bitLabel]'/>
+        <label ng-bind='bitLabel' for="target{{bitLabel}}"></label>
+    </span>
+    <button data-ng-click='selectAllAsTargetBits()'>All</button>
+</div>
+
+<div>
+    <button data-ng-click='performOperation()'>Perform Operation</button>
+</div>
+ 
+<div ng-bind='animatedQubitsModel.qstate'></div>
+
+<svg id='animatedQubitsSvg' data-animated-qubits='animatedQubitsModel.animatedQubits' class='animatedQubits'></svg>
+
+<script src="app/bower_components/animated-qubits/animatedQubits.min.js" type="text/javascript"></script>
+<script src="app/bower_components/d3/d3.min.js" type="text/javascript"></script>
+<script src="app/bower_components/d3-measure-text/lib/d3-measure-text.js" type="text/javascript"></script>
+<script src="app/bower_components/d3-transform/src/d3-transform.js" type="text/javascript"></script>
+<script src="app/bower_components/jsqubits/lib/jsqubits.js" type="text/javascript"></script>
+<script src="app/bower_components/q/q.js" type="text/javascript"></script>
+<script src="app/bower_components/lodash/dist/lodash.min.js" type="text/javascript"></script>
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>
+<script src="quantumAnimationController.js"></script>
+<script src="animatedQubitsDirective.js"></script>
+<script src="quantumAnimationApp.js"></script>
+
+</body>
+</html>
