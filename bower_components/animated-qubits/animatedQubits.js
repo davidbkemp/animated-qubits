@@ -69,18 +69,35 @@
             
             var applyOperation = function (operation, options) {
                 var phases = calculator.createPhases(stateComponents, operation),
-                    newStateComponents = phases.phase1.map(_.clone);
-                qstate = operation(qstate);
+                    newStateComponents = phases.phase1.map(_.clone),
+                    newQState = operation(qstate),
+                    phase5Promise;
+
+                qstate = newQState;
                 stateComponents = calculator.augmentState(qstate);
+                
                 if (options && options.skipInterferenceSteps) {
-                    return phase1(newStateComponents).then(phase5(phases));
+                    phase5Promise = phase1(newStateComponents).then(phase5(phases));
                 } else {
-                    return phase1(newStateComponents)
+                    phase5Promise = phase1(newStateComponents)
                         .then(phase2(phases, newStateComponents))
                         .then(phase3(phases))
                         .then(phase4(phases))
                         .then(phase5(phases));
                 }
+                
+                return phase5Promise.then(function returnNewQState() {
+                    return newQState;
+                });
+            };
+            
+            var performInitialRendering = function () {
+                // This should probably move to renderer itself.
+                renderer.updateDimensions();
+                renderer.renderBitLabels();
+                renderer.renderStateLabels();
+                stateComponents = calculator.augmentState(qstate);
+                return renderer.renderState(stateComponents, {duration: 0});
             };
 
             return {
@@ -90,11 +107,16 @@
                         numBits: numBits,
                         maxRadius: config.maxRadius
                     });
-                    renderer.updateDimensions();
-                    renderer.renderBitLabels();
-                    renderer.renderStateLabels();
-                    stateComponents = calculator.augmentState(qstate);
-                    renderer.renderState(stateComponents);
+                    return performInitialRendering();
+                },
+                resetQState: function (newQState) {
+                    currentOperationPromise = currentOperationPromise.then(function () {
+                        qstate = newQState;
+                        numBits = qstate.numBits();
+                        renderer.updateNumBits(numBits);
+                        return performInitialRendering();
+                    });
+                    return currentOperationPromise;
                 },
                 applyOperation: function (operation, options) {
                     currentOperationPromise = currentOperationPromise.then(function () {

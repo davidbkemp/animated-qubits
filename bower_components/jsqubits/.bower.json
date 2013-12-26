@@ -36,6 +36,6 @@
     "commit": "ef3c1728c3342ee20bd91d7b1b1cb7e3c764df05"
   },
   "_source": "git://github.com/davidbkemp/jsqubits.git",
-  "_target": "~0.1.x",
+  "_target": "~0.1.0",
   "_originalSource": "jsqubits"
 }

@@ -26,7 +26,12 @@
         
         $scope.operations = [
             {name: 'Hadamard', op: 'hadamard', options: {skipInterferenceSteps: false}},
-            {name: 'X', op: 'x', options: {skipInterferenceSteps: true}}
+            {name: 'X', op: 'x', options: {skipInterferenceSteps: true}},
+            {name: 'Y', op: 'y', options: {skipInterferenceSteps: true}},
+            {name: 'Z', op: 'z', options: {skipInterferenceSteps: true}},
+            {name: 'T', op: 't', options: {skipInterferenceSteps: true}},
+            {name: 'S', op: 's', options: {skipInterferenceSteps: true}},
+            {name: 'QFT', op: 'qft', options: {skipInterferenceSteps: false}}
         ];
         
         $scope.onChangeNumBits = function() {

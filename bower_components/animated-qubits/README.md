@@ -21,7 +21,7 @@ Add an svg element to the page:
     <svg id="svg" style="width: 600px; border: 1px solid black"></svg>
 
 
-Create a jsqubits object, pass it to the animatedQubits function to create an animatedQubits object, and ask it to display itself in the svg element (see also http://davidbkemp.github.io/jsqubits/):
+Create a jsqubits object, pass it to the animatedQubits function to create an animatedQubits object, and ask it to display itself in the svg element (see also http://davidbkemp.github.io/jsqubits/ )
 
     var animation = animatedQubits(jsqubits("|101>"), {maxRadius: 50});
     animation.display(document.getElementById("svg"));
@@ -56,7 +56,10 @@ Development
 -----------
 
 To run specs and validate the JavaScript:
+
     npm test
 
 To build animatedQubits.min.js:
+
     npm run-script build
+
