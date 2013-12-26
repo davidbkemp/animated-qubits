@@ -54,6 +54,9 @@ describe("animatedQubits", function () {
             renderStateLabels: function () {},
             renderState: function () {
                 return createMockPromise();
+            },
+            updateNumBits: function () {
+                
             }
         };
         
@@ -138,7 +141,53 @@ describe("animatedQubits", function () {
             
             animation.display("the svg element");
             
-            expect(mockRenderer.renderState).toHaveBeenCalledWith("augmented state");
+            expect(mockRenderer.renderState).toHaveBeenCalledWith("augmented state", {duration: 0});
+        });
+
+    });
+    
+    describe('#resetQState', function () {
+        var animation;
+            
+        beforeEach(function () {
+            animation = require('../animatedQubits')(jsqubits('|101>'), config);
+            animation.display("the svg element");
+        });
+        
+        it("should update renderer with new bit count", function () {
+            spyOn(mockRenderer, 'updateNumBits');
+            animation.resetQState(jsqubits('|1101>'));
+            expect(mockRenderer.updateNumBits).toHaveBeenCalledWith(4);
+        });
+        
+        it("should render the labels", function () {
+            spyOn(mockRenderer, 'updateDimensions');
+            spyOn(mockRenderer, 'renderBitLabels');
+            spyOn(mockRenderer, 'renderStateLabels');
+               
+            animation.resetQState(jsqubits('|1101>'));
+
+            expect(mockRenderer.updateDimensions).toHaveBeenCalled();
+            expect(mockRenderer.renderBitLabels).toHaveBeenCalled();
+            expect(mockRenderer.renderStateLabels).toHaveBeenCalled();
+        });
+
+        it("should augment the state", function () {
+            var newQState = jsqubits('|1101>');
+            spyOn(mockCalculator, 'augmentState');
+        
+            animation.resetQState(newQState);
+            
+            expect(mockCalculator.augmentState).toHaveBeenCalledWith(newQState);
+        });
+        
+        it("should render the augmented state", function () {
+            spyOn(mockCalculator, 'augmentState').andReturn("augmented state");
+            spyOn(mockRenderer, 'renderState');
+            
+            animation.resetQState(jsqubits('|1101>'));
+            
+            expect(mockRenderer.renderState).toHaveBeenCalledWith("augmented state", {duration: 0});
         });
 
     });

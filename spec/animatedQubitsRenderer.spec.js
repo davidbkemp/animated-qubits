@@ -19,6 +19,7 @@ describe("animatedQubitsRenderer", function () {
         mockQubitsGraphics,
         mockCalculatorModule,
         mockCalculator,
+        mockLabelsGroup,
         mockGraphicsGroup,
         config,
         textHeight = 13,
@@ -39,10 +40,12 @@ describe("animatedQubitsRenderer", function () {
             addText: function () {},
             addTextWithSubscript: function () {},
             createGroup: function () {return mockGraphicsGroup;},
-            renderAmplitudeDiscs: function () {}
+            renderAmplitudeDiscs: function () {},
+            remove: function () {}
         };
         
         mockGraphicsGroup = _.clone(mockQubitsGraphics);
+        mockLabelsGroup = _.clone(mockQubitsGraphics);
     
         mockQubitsGraphicsModule = function (element) {
             mockQubitsGraphicsModule.svgElement = element;
@@ -111,19 +114,40 @@ describe("animatedQubitsRenderer", function () {
             
         beforeEach(function () {
             renderer = require('../lib/animatedQubitsRenderer')(config);
+            spyOn(mockQubitsGraphics, 'createGroup').andReturn(mockLabelsGroup);
+        });
+
+        it("should create the labels group for the first time", function () {
+            renderer.renderBitLabels();
+            expect(mockQubitsGraphics.createGroup.calls.length).toBe(1);
+            expect(mockQubitsGraphics.createGroup).toHaveBeenCalledWith({
+                "class": "animatedQubitsLabels"
+            });
+        });
+        
+        it("should delete the old group on subsequent calls", function () {
+            spyOn(mockLabelsGroup, 'remove');
+            renderer.renderBitLabels();
+            expect(mockLabelsGroup.remove).not.toHaveBeenCalled();
+            renderer.renderBitLabels();
+            expect(mockLabelsGroup.remove).toHaveBeenCalled();
+            expect(mockQubitsGraphics.createGroup.calls.length).toBe(2);
+            expect(mockQubitsGraphics.createGroup.calls[1].args[0]).toEqual({
+                "class": "animatedQubitsLabels"
+            });
         });
 
         it('should create bit labels', function () {
-            spyOn(mockQubitsGraphics, 'addTextWithSubscript');
+            spyOn(mockLabelsGroup, 'addTextWithSubscript');
             
             renderer.renderBitLabels();
             
             var expectedY = 2 * textHeight / 3;
-            expect(mockQubitsGraphics.addTextWithSubscript)
+            expect(mockLabelsGroup.addTextWithSubscript)
                 .toHaveBeenCalledWith('q', '2', 0, expectedY);
-            expect(mockQubitsGraphics.addTextWithSubscript)
+            expect(mockLabelsGroup.addTextWithSubscript)
                 .toHaveBeenCalledWith('q', '1', textWidth, expectedY);
-            expect(mockQubitsGraphics.addTextWithSubscript)
+            expect(mockLabelsGroup.addTextWithSubscript)
                 .toHaveBeenCalledWith('q', '0', textWidth * 2, expectedY);
         });
     });
@@ -134,11 +158,13 @@ describe("animatedQubitsRenderer", function () {
         beforeEach(function () {
             config.numBits = 2;
             renderer = require('../lib/animatedQubitsRenderer')(config);
+            spyOn(mockQubitsGraphics, 'createGroup').andReturn(mockLabelsGroup);
+            renderer.renderBitLabels();
         });
 
         it('should create state labels', function () {
         
-            spyOn(mockQubitsGraphics, 'createGroup').andReturn(mockGraphicsGroup);
+            spyOn(mockLabelsGroup, 'createGroup').andReturn(mockGraphicsGroup);
             spyOn(mockGraphicsGroup, 'addText');
             spyOn(mockCalculator, 'yOffSetForState').andCallFake(function (state) {
                 return state * 100;
@@ -146,7 +172,7 @@ describe("animatedQubitsRenderer", function () {
             
             renderer.renderStateLabels();
             
-            expect(mockQubitsGraphics.createGroup).toHaveBeenCalledWith({
+            expect(mockLabelsGroup.createGroup).toHaveBeenCalledWith({
                 'class': 'animatedQubitsStateLabel', 'y': textHeight/3
             });
             expect(mockGraphicsGroup.addText).toHaveBeenCalledWith({
@@ -156,7 +182,7 @@ describe("animatedQubitsRenderer", function () {
                 'class': 'animatedQubitsStateBitLabel', 'x': textWidth, 'text': '0'
             });
             
-            expect(mockQubitsGraphics.createGroup).toHaveBeenCalledWith({
+            expect(mockLabelsGroup.createGroup).toHaveBeenCalledWith({
                 'class': 'animatedQubitsStateLabel',
                 'y': 100 + textHeight/3
             });
@@ -167,7 +193,7 @@ describe("animatedQubitsRenderer", function () {
                 'class': 'animatedQubitsStateBitLabel', 'x': textWidth, 'text': '1'
             });
             
-            expect(mockQubitsGraphics.createGroup).toHaveBeenCalledWith({
+            expect(mockLabelsGroup.createGroup).toHaveBeenCalledWith({
                 'class': 'animatedQubitsStateLabel',
                 'y': 200 + textHeight/3
             });
@@ -178,7 +204,7 @@ describe("animatedQubitsRenderer", function () {
                 'class': 'animatedQubitsStateBitLabel', 'x': textWidth, 'text': '0'
             });
             
-            expect(mockQubitsGraphics.createGroup).toHaveBeenCalledWith({
+            expect(mockLabelsGroup.createGroup).toHaveBeenCalledWith({
                 'class': 'animatedQubitsStateLabel',
                 'y': 300 + textHeight/3
             });

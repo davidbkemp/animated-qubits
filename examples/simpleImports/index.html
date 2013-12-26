@@ -12,6 +12,14 @@
     <button id='hadamardButton' onclick="hadamardAll()">Hadamard All</button>
     <button id='tButton' onclick="tAll()">T (aka &pi;/8) All</button>
 </div>
+<div>
+    Number of qubits:
+    <select id='bitCountSelection' onchange="updateNumBits()">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+    </select>
+</div>
 <div id="qstate">...</div>
 <svg id="svg" style="width: 600px; border: 1px solid black"></svg>
 
