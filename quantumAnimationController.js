@@ -7,61 +7,99 @@
 
     function QuantumAnimationController($scope) {
     
+        function updateState() {
+            $scope.controlBitsDisabled = $scope.numBits === 1 ||
+                !$scope.operations[$scope.operationIndex].takesControlBits;
+            if ($scope.controlBitsDisabled) $scope.controlBits.length = 0;
+            $scope.targetBitsDisabled = $scope.numBits === 1;
+            if ($scope.numBits === 1) $scope.targetBits = [true];
+        }
+    
         function initializeState() {
             $scope.numBits = parseInt($scope.numBitsSelected, 10);
             $scope.bitLabels.length = 0;
+            $scope.controlBits.length = 0;
             $scope.targetBits.length = 0;
-            for(var i = 0; i < $scope.numBits; i++) {
+            // Appending the labels in reverse makes it easier to render them that way
+            for(var i = $scope.numBits - 1; i >= 0; i--) {
                 $scope.bitLabels.push(i);
             }
 
-            $scope.animatedQubitsModel.qstate = new jsqubits.QState($scope.numBits);
+            $scope.animatedQubitsContainer.qstate = new jsqubits.QState($scope.numBits);
+            $scope.animatedQubitsContainer.animatedQubits =
+                animatedQubits($scope.animatedQubitsContainer.qstate, {maxRadius: 50});
+            updateState();
         }
     
         $scope.numBitsSelected = '2';
         $scope.operationIndex = 0;
         $scope.bitLabels = [];
+        $scope.controlBits = [];
         $scope.targetBits = [];
-        $scope.animatedQubitsModel = {};
+        $scope.animatedQubitsContainer = {};
         
         $scope.operations = [
-            {name: 'Hadamard', op: 'hadamard', options: {skipInterferenceSteps: false}},
-            {name: 'X', op: 'x', options: {skipInterferenceSteps: true}},
-            {name: 'Y', op: 'y', options: {skipInterferenceSteps: true}},
-            {name: 'Z', op: 'z', options: {skipInterferenceSteps: true}},
-            {name: 'T', op: 't', options: {skipInterferenceSteps: true}},
-            {name: 'S', op: 's', options: {skipInterferenceSteps: true}},
-            {name: 'QFT', op: 'qft', options: {skipInterferenceSteps: false}}
+            {name: 'Hadamard', op: 'controlledHadamard', options: {skipInterferenceSteps: false},
+                takesControlBits: true},
+            {name: 'X', op: 'controlledX', options: {skipInterferenceSteps: true},
+                takesControlBits: true},
+            {name: 'Y', op: 'controlledY', options: {skipInterferenceSteps: true},
+                takesControlBits: true},
+            {name: 'Z', op: 'controlledZ', options: {skipInterferenceSteps: true},
+                takesControlBits: true},
+            {name: 'T', op: 'controlledT', options: {skipInterferenceSteps: true},
+                takesControlBits: true},
+            {name: 'S', op: 'controlledS', options: {skipInterferenceSteps: true},
+                takesControlBits: true},
+            {name: 'QFT', op: 'qft', options: {skipInterferenceSteps: false},
+                takesControlBits: false}
         ];
+        
+        $scope.onChangeOperation = function name() {
+            updateState();
+        };
         
         $scope.onChangeNumBits = function() {
             initializeState();
-            $scope.animatedQubitsModel.animatedQubits.resetQState($scope.animatedQubitsModel.qstate);
+            $scope.animatedQubitsContainer.reset();
         };
 
         $scope.selectAllAsTargetBits = function () {
             for(var i = 0; i < $scope.numBits; i++) {
-                $scope.targetBits[i] = true;
+                $scope.targetBits[i] = ! $scope.controlBits[i];
             }
+        };
+        
+        $scope.validInputs = function () {
+            return $scope.targetBits.indexOf(true) >= 0;
         };
 
         $scope.performOperation = function () {
+            var controlBits = [];
             var targetBits = [];
             var operation = $scope.operations[$scope.operationIndex];
             
-            for (var i = 0; i < $scope.targetBits.length; i++) {
-                if ($scope.targetBits[i]) {
-                    targetBits.push(i);
+            for (var targetBitsIndex = 0; targetBitsIndex < $scope.targetBits.length; targetBitsIndex++) {
+                if ($scope.targetBits[targetBitsIndex]) {
+                    targetBits.push(targetBitsIndex);
                 }
             }
+            for (var controlBitsIndex = 0; controlBitsIndex < $scope.controlBits.length; controlBitsIndex++) {
+                if ($scope.controlBits[controlBitsIndex]) {
+                    controlBits.push(controlBitsIndex);
+                }
+            }
+            if (controlBits.length === 0) controlBits = null;
             var op = function op(qstate) {
-                return qstate[operation.op](targetBits);
+                return operation.takesControlBits ?
+                    qstate[operation.op](controlBits, targetBits) :
+                    qstate[operation.op](targetBits);
             };
 
-            $scope.animatedQubitsModel.animatedQubits.applyOperation(op, operation.options)
+            $scope.animatedQubitsContainer.animatedQubits.applyOperation(op, operation.options)
                 .then(function succeeded() {
                     $scope.$apply(function () {
-                        $scope.animatedQubitsModel.qstate = op($scope.animatedQubitsModel.qstate);
+                        $scope.animatedQubitsContainer.qstate = op($scope.animatedQubitsContainer.qstate);
                     });
                 })
                 .fail(function failed(msg) {
@@ -70,9 +108,6 @@
         };
 
         initializeState();
-
-        $scope.animatedQubitsModel.animatedQubits =
-            animatedQubits($scope.animatedQubitsModel.qstate, {maxRadius: 50});
     }
     
 

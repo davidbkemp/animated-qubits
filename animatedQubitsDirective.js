@@ -7,11 +7,15 @@
     
         return {
            scope: {
-                animatedQubits: '='
+                animatedQubitsContainer: '=animatedQubits'
             },
             
             link: function postLink(scope, element) {
-                scope.animatedQubits.display(element[0]);
+                scope.animatedQubitsContainer.animatedQubits.display(element[0]);
+                scope.animatedQubitsContainer.reset = function reset() {
+                    element.empty();
+                    scope.animatedQubitsContainer.animatedQubits.display(element[0]);
+                };
             }
         };
         
