@@ -49,7 +49,7 @@ describe("animatedQubits", function () {
         };
         
         mockRenderer = {
-            updateDimensions: function () {},
+            getNaturalDimensions: function () {},
             renderBitLabels: function () {},
             renderStateLabels: function () {},
             renderState: function () {
@@ -113,13 +113,11 @@ describe("animatedQubits", function () {
         });
         
         it("should render the labels", function () {
-            spyOn(mockRenderer, 'updateDimensions');
             spyOn(mockRenderer, 'renderBitLabels');
             spyOn(mockRenderer, 'renderStateLabels');
                
             animation.display("the svg element");
 
-            expect(mockRenderer.updateDimensions).toHaveBeenCalled();
             expect(mockRenderer.renderBitLabels).toHaveBeenCalled();
             expect(mockRenderer.renderStateLabels).toHaveBeenCalled();
         });
@@ -317,6 +315,33 @@ describe("animatedQubits", function () {
                 expect(renderStateCalls[1][0]).toEqual('phase5');
                 expect(renderStateCalls[1][1]).toBeUndefined();
             });
+        });
+    });
+    
+    describe("getNaturalDimensions", function () {
+    
+        var animation;
+            
+        beforeEach(function () {
+            var qstate = jsqubits('|101>');
+            animation = require('../animatedQubits')(qstate, config);
+        });
+    
+        it("should throw an error if display() has not yet been called", function () {
+            function callWithoutDisplay() {
+                animation.getNaturalDimensions();
+            }
+            
+            expect(callWithoutDisplay).toThrow();
+        });
+        
+        it("should delegate to the renderer object", function () {
+            animation.display("the svg element");
+            spyOn(mockRenderer, 'getNaturalDimensions').andReturn("natural dimensions");
+            
+            var actual = animation.getNaturalDimensions();
+            
+            expect(actual).toBe("natural dimensions");
         });
     });
 

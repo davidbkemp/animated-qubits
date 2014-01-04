@@ -4,7 +4,13 @@
 "use strict";
 
 var animation = animatedQubits(jsqubits("|101>"), {maxRadius: 50});
-animation.display(document.getElementById("svg"));
+var svgElement = document.getElementById("svg");
+animation.display(svgElement);
+
+var naturalDimensions = animation.getNaturalDimensions();
+
+svgElement.setAttribute("height", naturalDimensions.height);
+svgElement.setAttribute("width", naturalDimensions.width);
 
 globals.hadamardAll = function () {
     animation.applyOperation(function hadamardAll(qstate) {

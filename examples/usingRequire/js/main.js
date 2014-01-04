@@ -31,7 +31,13 @@ requirejs.config({
 requirejs(['animatedQubits', 'jsqubits', 'd3Transform'],
     function (animatedQubits, jsqubits) {
         var animation = animatedQubits(jsqubits("|101>"), {maxRadius: 50});
-        animation.display(document.getElementById("svg"));
+        var svgElement = document.getElementById("svg");
+        animation.display(svgElement);
+        
+        var naturalDimensions = animation.getNaturalDimensions();
+
+        svgElement.setAttribute("height", naturalDimensions.height);
+        svgElement.setAttribute("width", naturalDimensions.width);
 
         function hadamardAllClick() {
             animation.applyOperation(function hadamardAll(qstate) {

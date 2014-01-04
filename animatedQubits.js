@@ -98,11 +98,14 @@
                         numBits: numBits,
                         maxRadius: config.maxRadius
                     });
-                    renderer.updateDimensions();
                     renderer.renderBitLabels();
                     renderer.renderStateLabels();
                     stateComponents = calculator.augmentState(qstate);
                     renderer.renderState(stateComponents);
+                },
+                getNaturalDimensions: function () {
+                    if (!renderer) throw "Sorry, you must call display() before calling getNaturalDimensions()";
+                    return renderer.getNaturalDimensions();
                 },
                 applyOperation: function (operation, options) {
                     currentOperationPromise = currentOperationPromise.then(function () {

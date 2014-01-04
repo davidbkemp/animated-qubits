@@ -6,7 +6,7 @@
 function applyOperation(operation, options) {
     animation.applyOperation(operation, options)
         .then(function displayNewQstate(qstate) {
-            document.getElementById("qstate").innerText = qstate.toString();
+            qstateElement.innerText = qstate.toString();
         })
         .fail(function (msg) {
             if (console && console.log) console.log(msg);
@@ -14,12 +14,18 @@ function applyOperation(operation, options) {
         });
 }
 
+var qstateElement = document.getElementById("qstate");
 var qstate = jsqubits("|101>").hadamard(0).T(0);
-document.getElementById("qstate").innerText = qstate.toString();
-
 var animation = animatedQubits(qstate, {maxRadius: 50});
+var svgElement = document.getElementById("svg");
 
-animation.display(document.getElementById("svg"));
+qstateElement.innerText = qstate.toString();
+animation.display(svgElement);
+
+var naturalDimensions = animation.getNaturalDimensions();
+
+svgElement.setAttribute("height", naturalDimensions.height);
+svgElement.setAttribute("width", naturalDimensions.width);
 
 globals.hadamardAll = function () {
     applyOperation(function hadamardAll(qstate) {

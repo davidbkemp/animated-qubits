@@ -75,34 +75,25 @@ describe("animatedQubitsRenderer", function () {
         expect(mockQubitsGraphicsModule.svgElement).toBe(config.element);
     });
         
-    describe('#updateDimensions', function () {
-        var renderer,
-            numStates;
+    describe('#getNaturalDimensions', function () {
+        var numStates, dimensions;
             
         beforeEach(function () {
+            spyOn(mockCalculator, 'yOffSetForState').andReturn(100);
+
             numStates = 1 << config.numBits;
-            renderer = require('../lib/animatedQubitsRenderer')(config);
+            var renderer = require('../lib/animatedQubitsRenderer')(config);
+            dimensions = renderer.getNaturalDimensions();
         });
         
-        it("should set the height", function () {
-            spyOn(mockCalculator, 'yOffSetForState').andReturn(100);
-            spyOn(mockQubitsGraphics, 'setHeight');
-               
-            renderer.updateDimensions();
-            
+        it("should return the natural height height", function () {
             expect(mockCalculator.yOffSetForState).toHaveBeenCalledWith(numStates - 1);
-            expect(mockQubitsGraphics.setHeight).toHaveBeenCalledWith(config.maxRadius + 100);
+            expect(dimensions.height).toBe(config.maxRadius + 100);
         });
 
 
-        it('should set the width', function () {
-            spyOn(mockQubitsGraphics, 'setWidth');
-            
-            renderer.updateDimensions();
-            
-            expect(mockQubitsGraphics.setWidth)
-                .toHaveBeenCalledWith((1 + config.numBits) * textWidth + 6 * config.maxRadius);
-
+        it('should return the natural width', function () {
+            expect(dimensions.width).toBe((1 + config.numBits) * textWidth + 4 * config.maxRadius);
         });
     });
     
