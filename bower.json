@@ -17,6 +17,6 @@
     "tests"
   ],
   "dependencies": {
-    "animated-qubits": "~0.0.3"
+    "animated-qubits": "~0.0.4"
   }
 }

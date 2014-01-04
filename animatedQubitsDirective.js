@@ -11,10 +11,18 @@
             },
             
             link: function postLink(scope, element) {
-                scope.animatedQubitsContainer.animatedQubits.display(element[0]);
+                function updateDisplay() {
+                    scope.animatedQubitsContainer.animatedQubits.display(element[0]);
+                    var naturalDimensions = scope.animatedQubitsContainer.animatedQubits.getNaturalDimensions();
+                    element.attr("height", naturalDimensions.height);
+                    //element.attr("width", naturalDimensions.width);
+                }
+                
+                updateDisplay();
+
                 scope.animatedQubitsContainer.reset = function reset() {
                     element.empty();
-                    scope.animatedQubitsContainer.animatedQubits.display(element[0]);
+                    updateDisplay();
                 };
             }
         };

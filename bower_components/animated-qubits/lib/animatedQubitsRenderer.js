@@ -20,7 +20,6 @@
                 numStates = 1 << numBits,
                 textHeight = graphics.getTextHeight(),
                 textWidth = graphics.getTextWidth(),
-                labelsGroup,
                 amplitudeDiscsGroup;
 
             var determineTotalHeight = function () {
@@ -28,7 +27,7 @@
             };
             
             var determineTotalWidth = function () {
-                return (1 + numBits) * textWidth + 6 *  maxRadius;
+                return (1 + numBits) * textWidth + 4 *  maxRadius;
             };
             
             var asBitString = function (state) {
@@ -48,27 +47,25 @@
 
             return {
             
-                updateDimensions: function () {
-                    graphics.setHeight(determineTotalHeight());
-                    graphics.setWidth(determineTotalWidth());
+                getNaturalDimensions: function () {
+                    return {
+                        height: determineTotalHeight(),
+                        width: determineTotalWidth()
+                    };
                 },
-                
+
                 renderBitLabels: function () {
-                    if (labelsGroup) labelsGroup.remove();
-                    labelsGroup = graphics.createGroup({
-                        'class': 'animatedQubitsLabels'
-                    });
                     var y = 2 * textHeight / 3;
                     for (var i = 0; i < numBits; i++) {
                         var subscript = (numBits - i - 1).toString();
                         var x = i * textWidth;
-                        labelsGroup.addTextWithSubscript('q', subscript, x, y);
+                        graphics.addTextWithSubscript('q', subscript, x, y);
                     }
                 },
                 
                 renderStateLabels: function () {
                     for (var state = 0; state < numStates; state++) {
-                        renderStateBitLabels(state, labelsGroup.createGroup({
+                        renderStateBitLabels(state, graphics.createGroup({
                             'class': 'animatedQubitsStateLabel',
                             'y': animationCalculator.yOffSetForState(state) + textHeight/3
                         }));
@@ -81,11 +78,6 @@
                         'x': maxRadius + (numBits + 1) * textWidth
                     });
                     return amplitudeDiscsGroup.renderAmplitudeDiscs(stateComponents, config, options);
-                },
-                
-                updateNumBits: function (newNumBits) {
-                    numBits = newNumBits;
-                    numStates = 1 << numBits;
                 }
                 
             };

@@ -90,15 +90,6 @@
                     return newQState;
                 });
             };
-            
-            var performInitialRendering = function () {
-                // This should probably move to renderer itself.
-                renderer.updateDimensions();
-                renderer.renderBitLabels();
-                renderer.renderStateLabels();
-                stateComponents = calculator.augmentState(qstate);
-                return renderer.renderState(stateComponents, {duration: 0});
-            };
 
             return {
                 display: function (svgElement) {
@@ -107,16 +98,14 @@
                         numBits: numBits,
                         maxRadius: config.maxRadius
                     });
-                    return performInitialRendering();
+                    renderer.renderBitLabels();
+                    renderer.renderStateLabels();
+                    stateComponents = calculator.augmentState(qstate);
+                    renderer.renderState(stateComponents);
                 },
-                resetQState: function (newQState) {
-                    currentOperationPromise = currentOperationPromise.then(function () {
-                        qstate = newQState;
-                        numBits = qstate.numBits();
-                        renderer.updateNumBits(numBits);
-                        return performInitialRendering();
-                    });
-                    return currentOperationPromise;
+                getNaturalDimensions: function () {
+                    if (!renderer) throw "Sorry, you must call display() before calling getNaturalDimensions()";
+                    return renderer.getNaturalDimensions();
                 },
                 applyOperation: function (operation, options) {
                     currentOperationPromise = currentOperationPromise.then(function () {

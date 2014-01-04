@@ -1,7 +1,7 @@
 {
   "name": "animated-qubits",
   "main": "animatedQubits.js",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "homepage": "https://github.com/davidbkemp/animated-qubits",
   "description": "quantum computation animation development library",
   "keywords": [
@@ -35,13 +35,13 @@
     "lodash": "~2.3.0",
     "d3-transform": "trinary/d3-transform"
   },
-  "_release": "0.0.3",
+  "_release": "0.0.4",
   "_resolution": {
     "type": "version",
-    "tag": "v0.0.3",
-    "commit": "aaef1b30baceaffee3abcfab6810a64583b4b5f3"
+    "tag": "v0.0.4",
+    "commit": "8b594a59b67fd3bb3800880b583cb58319906e4d"
   },
   "_source": "git://github.com/davidbkemp/animated-qubits.git",
-  "_target": "~0.0.3",
+  "_target": "~0.0.4",
   "_originalSource": "animated-qubits"
 }

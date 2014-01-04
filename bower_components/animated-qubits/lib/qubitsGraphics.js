@@ -150,10 +150,6 @@
                     renderNewAmplitudeDiscs(amplitudeDiscGroup, stateComponents, config);
                     amplitudeDiscGroup.exit().remove();
                     return transitionsEndedPromise;
-                },
-                remove: function () {
-                    d3Element.remove();
-                    d3Element = null;
                 }
             };
         };

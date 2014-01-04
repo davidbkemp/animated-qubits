@@ -2,7 +2,7 @@
   "author": "David Kemp <davidbkemp@gmail.com> (https://github.com/davidbkemp)",
   "name": "animated-qubits",
   "description": "Library to support the animation of quantum computation.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "repository": "git://github.com/davidbkemp/animated-qubits.git",
   "main": "animatedQubits.js",
   "scripts": {
