@@ -3,16 +3,16 @@
 (function (globals) {
     "use strict";
     
-    var createModule = function (_, Q, rendererFactory, calculatorFactory) {
+    function createModule(_, Q, rendererFactory, calculatorFactory) {
 
-        var ensureDependenciesAreSet = function () {
+        function ensureDependenciesAreSet() {
             _ = _ || globals._;
             Q = Q || globals.Q;
             rendererFactory = rendererFactory || globals.animatedQubitsInternal.rendererFactory;
             calculatorFactory = calculatorFactory || globals.animatedQubitsInternal.calculatorFactory;
-        };
+        }
     
-        return function (qstate, config) {
+        return function animatedQubits(qstate, config) {
             ensureDependenciesAreSet();
             var stateComponents,
                 numBits = qstate.numBits(),
@@ -20,11 +20,11 @@
                 calculator = calculatorFactory(config),
                 currentOperationPromise = Q.when();
 
-            var phase1 = function (newStateComponents) {
+            function phase1(newStateComponents) {
                 return renderer.renderState(newStateComponents, {duration: 0});
-            };
+            }
             
-            var phase2 = function (phases, newStateComponents) {
+            function phase2(phases, newStateComponents) {
                 return function () {
                     var promise = Q.when();
                     phases.stateComponentIndexesGroupedBySource.forEach(function(indexGroup) {
@@ -33,9 +33,9 @@
                     });
                     return promise;
                 };
-            };
+            }
             
-            var phase2a = function (phases, newStateComponents, indexGroup) {
+            function phase2a(phases, newStateComponents, indexGroup) {
                 return function () {
                     indexGroup.forEach(function(index) {
                         var key = newStateComponents[index].key;
@@ -43,9 +43,9 @@
                     });
                     return renderer.renderState(newStateComponents, {duration: 0});
                 };
-            };
+            }
             
-            var phase2b = function (phases, newStateComponents, indexGroup) {
+            function phase2b(phases, newStateComponents, indexGroup) {
                 return function () {
                     indexGroup.forEach(function(index) {
                         var key = newStateComponents[index].key;
@@ -53,21 +53,21 @@
                     });
                     return renderer.renderState(newStateComponents);
                 };
-            };
+            }
             
-            var phase3 = function name(phases) {
+            function phase3(phases) {
                 return renderer.renderState.bind(null, phases.phase3);
-            };
+            }
             
-            var phase4 = function name(phases) {
+            function phase4(phases) {
                 return renderer.renderState.bind(null, phases.phase4, {duration: 0});
-            };
+            }
             
-            var phase5 = function name(phases) {
+            function phase5(phases) {
                 return renderer.renderState.bind(null, phases.phase5);
-            };
+            }
             
-            var applyOperation = function (operation, options) {
+            function applyOperation(operation, options) {
                 var phases = calculator.createPhases(stateComponents, operation),
                     newStateComponents = phases.phase1.map(_.clone),
                     newQState = operation(qstate),
@@ -89,7 +89,7 @@
                 return phase5Promise.then(function returnNewQState() {
                     return newQState;
                 });
-            };
+            }
 
             return {
                 display: function (svgElement) {
@@ -115,7 +115,7 @@
                 }
             };
         };
-    };
+    }
 
     /* Support AMD and CommonJS, with a fallback of putting animatedQubits in the global namespace */
     if (typeof define !== 'undefined' && define.amd) {
