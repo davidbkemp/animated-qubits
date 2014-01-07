@@ -1,4 +1,4 @@
-/* global requirejs, document, console, alert */
+/* global requirejs, document, alert */
 
 (function () {
 "use strict";
@@ -43,7 +43,6 @@ requirejs(['animatedQubits', 'jsqubits', 'd3Transform'],
             animation.applyOperation(function hadamardAll(qstate) {
                 return qstate.hadamard(jsqubits.ALL);
             }).fail(function (msg) {
-                if (console && console.log) console.log(msg);
                 alert(msg);
             });
         }

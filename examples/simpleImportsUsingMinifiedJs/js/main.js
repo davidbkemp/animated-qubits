@@ -1,4 +1,4 @@
-/* global animatedQubits, jsqubits, document, alert, console */
+/* global animatedQubits, jsqubits, document, alert */
 
 (function (globals) {
 "use strict";
@@ -16,7 +16,6 @@ globals.hadamardAll = function () {
     animation.applyOperation(function hadamardAll(qstate) {
         return qstate.hadamard(jsqubits.ALL);
     }).fail(function (msg) {
-        if (console && console.log) console.log(msg);
         alert(msg);
     });
 };

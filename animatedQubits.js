@@ -55,18 +55,10 @@
                 };
             }
             
-            function phase3(phases) {
-                return renderer.renderState.bind(null, phases.phase3);
+            function createStateRendererFor(stateComponents, options) {
+                return renderer.renderState.bind(null, stateComponents, options);
             }
-            
-            function phase4(phases) {
-                return renderer.renderState.bind(null, phases.phase4, {duration: 0});
-            }
-            
-            function phase5(phases) {
-                return renderer.renderState.bind(null, phases.phase5);
-            }
-            
+
             function applyOperation(operation, options) {
                 var phases = calculator.createPhases(stateComponents, operation),
                     newStateComponents = phases.phase1.map(_.clone),
@@ -77,18 +69,35 @@
                 stateComponents = calculator.augmentState(qstate);
                 
                 if (options && options.skipInterferenceSteps) {
-                    phase5Promise = phase1(newStateComponents).then(phase5(phases));
+                    phase5Promise = phase1(newStateComponents)
+                        .then(createStateRendererFor(phases.phase5))
+                        .then(createStateRendererFor(stateComponents, {duration: 0}));
                 } else {
                     phase5Promise = phase1(newStateComponents)
                         .then(phase2(phases, newStateComponents))
-                        .then(phase3(phases))
-                        .then(phase4(phases))
-                        .then(phase5(phases));
+                        .then(createStateRendererFor(phases.phase3))
+                        .then(createStateRendererFor(phases.phase4, {duration: 0}))
+                        .then(createStateRendererFor(phases.phase5))
+                        .then(createStateRendererFor(stateComponents, {duration: 0}));
                 }
                 
                 return phase5Promise.then(function returnNewQState() {
                     return newQState;
                 });
+            }
+            
+            function measure(bits) {
+                var intermediateStateComponents, newStateComponents;
+                qstate = qstate.measure(bits).newState;
+                newStateComponents = calculator.augmentState(qstate);
+                intermediateStateComponents = calculator.createIntermediateState(stateComponents, newStateComponents);
+                stateComponents = newStateComponents;
+                return renderer.renderState(intermediateStateComponents)
+                    .then(function measurementPhase2() {
+                        return renderer.renderState(newStateComponents, {duration: 0});
+                    }).then(function returnNewQState() {
+                        return qstate;
+                    });
             }
 
             return {
@@ -110,6 +119,12 @@
                 applyOperation: function (operation, options) {
                     currentOperationPromise = currentOperationPromise.then(function () {
                         return applyOperation(operation, options);
+                    });
+                    return currentOperationPromise;
+                },
+                measure: function (bits) {
+                    currentOperationPromise = currentOperationPromise.then(function () {
+                        return measure(bits);
                     });
                     return currentOperationPromise;
                 }

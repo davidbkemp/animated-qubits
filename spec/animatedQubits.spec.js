@@ -64,7 +64,8 @@ describe("animatedQubits", function () {
         
         mockCalculator = {
             augmentState: function () { return []; },
-            createPhases: function () { return {}; }
+            createPhases: function () { return {}; },
+            createIntermediateState: function () { return []; }
         };
         
         mockCalculatorModule = function () {
@@ -185,7 +186,11 @@ describe("animatedQubits", function () {
                 renderStateCalls.push(_.cloneDeep(arguments));
                 return createMockPromise();
             };
-            
+
+            spyOn(mockCalculator, 'augmentState').andCallFake(function fakeAugmentState(state) {
+                return "augmented state for " + state.toString();
+            });
+
             spyOn(mockCalculator, 'createPhases').andReturn({
                 phase1: phase1,
                 phase2a: phase2a,
@@ -196,7 +201,7 @@ describe("animatedQubits", function () {
                 stateComponentIndexesGroupedBySource: [[0, 1], [2, 3]]
             });
             operationCalls = [];
-            operationReturnState = qstate.T(0);
+            operationReturnState = qstate.t(0);
             operation = function op(state) {
                 operationCalls.push(state);
                 return operationReturnState;
@@ -291,19 +296,20 @@ describe("animatedQubits", function () {
             expect(operationCalls[0]).toBe(qstate);
         });
         
-        it("should augment the new state", function () {
-            spyOn(mockCalculator, 'augmentState');
+        it("should augment and render the new state", function () {
             animation.applyOperation(operation, options);
             expect(mockCalculator.augmentState).toHaveBeenCalledWith(operationReturnState);
+            expect(renderStateCalls[8][0]).toEqual("augmented state for " + operationReturnState.toString());
+            expect(renderStateCalls[8][1]).toEqual({duration: 0});
         });
         
         describe("when applied for a second time", function () {
             it("should create phases based on the new state", function () {
-                spyOn(mockCalculator, 'augmentState').andReturn(["newAugmentedState"]);
                 animation.applyOperation(operation, options);
                 animation.applyOperation(operation, options);
                 expect(mockCalculator.createPhases.calls.length).toBe(2);
-                expect(mockCalculator.createPhases.calls[1].args[0]).toEqual(["newAugmentedState"]);
+                expect(mockCalculator.createPhases.calls[1].args[0])
+                    .toEqual("augmented state for " + operationReturnState.toString());
             });
         });
         
@@ -314,7 +320,83 @@ describe("animatedQubits", function () {
                 expect(renderStateCalls[0][1]).toEqual({duration: 0});
                 expect(renderStateCalls[1][0]).toEqual('phase5');
                 expect(renderStateCalls[1][1]).toBeUndefined();
+                expect(renderStateCalls[2][0]).toEqual("augmented state for " + operationReturnState.toString());
+                expect(renderStateCalls[2][1]).toEqual({duration: 0});
             });
+        });
+    });
+    
+    describe("#measure", function () {
+    
+        var animation,
+            qstate,
+            bits,
+            expectedResultQState,
+            renderStateCalls;
+            
+            
+        beforeEach(function () {
+            bits = [0, 1];
+            qstate = jsqubits('|101>').hadamard(0);
+            animation = require('../animatedQubits')(qstate, config);
+            animation.display('svg element');
+            expectedResultQState = jsqubits('|101>');
+            spyOn(qstate, "measure").andReturn({newState: expectedResultQState});
+
+            
+            // Roll our own mockRenderer so we can clone the call arguments.
+            renderStateCalls = [];
+            mockRenderer.renderState = function renderState() {
+                renderStateCalls.push(_.cloneDeep(arguments));
+                return createMockPromise();
+            };
+            
+            spyOn(mockCalculator, 'createIntermediateState').andReturn(["intermediateState"]);
+        });
+    
+        it("should wait for any exisiting operation to complete", function () {
+            var nextPromise = createMockPromise();
+            spyOn(mockInitialPromise, 'then').andReturn(nextPromise);
+
+            var returnValue = animation.measure(bits);
+            
+            expect(mockInitialPromise.then).toHaveBeenCalled();
+            expect(returnValue).toBe(nextPromise);
+        });
+        
+        it("should return a promise that provides the final state", function () {
+            var promise = animation.measure(bits);
+            
+            expect(qstate.measure).toHaveBeenCalledWith(bits);
+            promise.then(function finalThen(actualReturnedState) {
+                expect(actualReturnedState).toBe(expectedResultQState);
+            });
+        });
+        
+        it("should augment the new state", function () {
+            spyOn(mockCalculator, "augmentState");
+            
+            animation.measure(bits);
+
+            expect(mockCalculator.augmentState).toHaveBeenCalledWith(expectedResultQState);
+        });
+        
+        it("should create an intermediate state", function () {
+            spyOn(mockCalculator, "augmentState").andReturn(["finalState"]);
+            
+            animation.measure(bits);
+            
+            expect(mockCalculator.createIntermediateState)
+                .toHaveBeenCalledWith(jasmine.any(Array), ["finalState"]);
+        });
+        
+        it("should render the intermediate state and the final state", function () {
+            spyOn(mockCalculator, "augmentState").andReturn(["finalState"]);
+            
+            animation.measure(bits);
+
+            expect(renderStateCalls[0][0]).toEqual(["intermediateState"]);
+            expect(renderStateCalls[1][0]).toEqual(["finalState"]);
         });
     });
     

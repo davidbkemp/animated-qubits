@@ -6,7 +6,7 @@
 var jsqubits = require('jsqubits').jsqubits,
     _ = require('lodash');
 
-describe("qubitAnimationRenderer", function () {
+describe("qubitAnimationCalculator", function () {
     var config, calculator, maxRadius = 64;
 
     var findStateComponentWithKey = function (stateComponents, key) {
@@ -261,6 +261,32 @@ describe("qubitAnimationRenderer", function () {
         });
 
     });
+    
+    describe("#createIntermediateState", function () {
+        it("should return a state similar to the dest parameter, " +
+            "but with tiny amplitudes instead of zero for the corresponding non-zero " +
+            "amplitudes in the first parameter", function () {
+            
+            var qstate1 = jsqubits('|10>').hadamard(0).multiply(jsqubits.complex(0,1));
+            var qstate2 = jsqubits('|11>').t([0,1]).multiply(jsqubits.complex(0,1));
+            var src = calculator.augmentState(qstate1);
+            var dest = calculator.augmentState(qstate2);
+            var result = calculator.createIntermediateState(src, dest);
+            
+            expect(result.length).toBe(2);
+
+            expect(result[0].bitString).toBe('10');
+            expect(result[0].key).toEqual(src[0].key);
+            expect(result[0].amplitude.magnitude()).toBeCloseTo(0, 2);
+            expect(result[0].amplitude.phase()).toBeCloseTo(Math.PI/2, 2);
+            
+            expect(result[1].bitString).toBe('11');
+            expect(result[1].key).toEqual(src[1].key);
+            expect(result[1].amplitude.magnitude()).toEqual(src[1].amplitude.magnitude());
+            expect(result[1].amplitude.phase()).toEqual(src[1].amplitude.phase());
+        });
+    });
+    
 });
 
 })();

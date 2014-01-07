@@ -1,4 +1,4 @@
-/* global animatedQubits, jsqubits, document, alert, console */
+/* global animatedQubits, jsqubits, document, alert */
 
 (function (globals) {
 "use strict";
@@ -9,7 +9,6 @@ function applyOperation(operation, options) {
             qstateElement.innerText = qstate.toString();
         })
         .fail(function (msg) {
-            if (console && console.log) console.log(msg);
             alert(msg);
         });
 }
@@ -37,6 +36,16 @@ globals.tAll = function () {
     applyOperation(function tAll(qstate) {
         return qstate.t(jsqubits.ALL);
     }, {skipInterferenceSteps: true});
+};
+
+globals.measure = function () {
+    animation.measure(jsqubits.ALL)
+        .then(function displayNewQstate(qstate) {
+            qstateElement.innerText = qstate.toString();
+        })
+        .fail(function (msg) {
+            alert(msg);
+        });
 };
 
 })(this);
