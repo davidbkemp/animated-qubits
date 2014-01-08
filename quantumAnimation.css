@@ -1,6 +1,6 @@
 .animatedQubits {
     border: 1px solid black;
-    width: 26em;
+    width: 32em;
     margin: 1em;
 }
 
@@ -18,7 +18,7 @@
 }
 
 .quantumOpSpecification {
-    width: 22em;
+    width: 28em;
     margin: 1em;
     padding: 0 2em;
     border: 1px solid #999;
