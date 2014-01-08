@@ -3,40 +3,40 @@
 (function (globals) {
     "use strict";
 
-    var createModule = function (_, jsqubits) {
+    function createModule(_, jsqubits) {
 
-        var ensureDependenciesAreSet = function () {
+        function ensureDependenciesAreSet() {
             _ = _ || globals._;
             jsqubits = jsqubits || globals.jsqubits;
-        };
+        }
 
-        var calculatorFactory = function (config) {
+        function calculatorFactory(config) {
             ensureDependenciesAreSet();
             var maxRadius = config.maxRadius,
                 smallComplexWithZeroPhase = jsqubits.complex(0.0001);
         
-            var yOffSetForState = function (state) {
+            function yOffSetForState(state) {
                 // A single qubit state can have a radius of up to maxRadius,
                 // but two (valid) qubit states will be closest when each has a radius of 1/sqrt(2).
                 return maxRadius * (state * Math.SQRT2 + 1);
-            };
+            }
             
-            var createPhase1State = function (stateComponent, subSeq) {
+            function createPhase1State(stateComponent, subSeq) {
                 var phase1State = _.clone(stateComponent);
                 phase1State.key = stateComponent.key + '-' + subSeq;
                 if (subSeq > 1) {
                     phase1State.amplitude = jsqubits.ZERO;
                 }
                 return phase1State;
-            };
+            }
 
-            var createPhase2aState = function (oldStateComponent, phase1State) {
+            function createPhase2aState(oldStateComponent, phase1State) {
                 var phase2aState = _.clone(phase1State);
                 phase2aState.amplitude = oldStateComponent.amplitude;
                 return phase2aState;
-            };
+            }
             
-            var createPhase2bState = function (phase2aState, newStateComponent, phase2bGroupedByState) {
+            function createPhase2bState(phase2aState, newStateComponent, phase2bGroupedByState) {
                 var phase2bState = _.clone(phase2aState),
                     numericIndex = newStateComponent.asNumber();
                 phase2bState.amplitude = phase2aState.amplitude.multiply(newStateComponent.amplitude);
@@ -55,25 +55,25 @@
                 }
                 stateGroup.push(phase2bState);
                 return phase2bState;
-            };
+            }
 
-            var mapStateGroupsToKeyGroups = function (stateGroups) {
+            function mapStateGroupsToKeyGroups(stateGroups) {
                 return Object.keys(stateGroups).map(function keyGroupForIndex(index) {
                     return stateGroups[index].map(function extractKey(stateComponent) {
                         return stateComponent.key;
                     });
                 });
-            };
+            }
 
-            var createPhase3 = function (phases, keysGroupedByDestinationState) {
+            function createPhase3(phases, keysGroupedByDestinationState) {
 
-                var sumAllAmplitudesInKeyGroup = function (keyGroup) {
+                function sumAllAmplitudesInKeyGroup(keyGroup) {
                     return keyGroup.reduce(function sumAmplitudes(accumulator, key) {
                         return accumulator.add(phases.phase2b[key].amplitude);
                     }, jsqubits.ZERO);
-                };
+                }
 
-                var addAllAmplitudesToFirstStateComponent = function(keyGroup) {
+                function addAllAmplitudesToFirstStateComponent(keyGroup) {
                     var totalAmplitude = sumAllAmplitudesInKeyGroup(keyGroup);
                         // NOTE: The first key in the key group is regarded as the 'primary' for the group.
                     var groupPrimaryState = _.clone(phases.phase2b[keyGroup[0]]);
@@ -84,9 +84,9 @@
 
                     phases.phase3.push(groupPrimaryState);
                     return groupPrimaryState;
-                };
+                }
 
-                var shrinkRemainingAmplitudes = function (groupPrimaryState, keyGroup) {
+                function shrinkRemainingAmplitudes(groupPrimaryState, keyGroup) {
                     var totalAmplitude = groupPrimaryState.amplitude;
                     var endOfArrowX = groupPrimaryState.x + totalAmplitude.real() * config.maxRadius;
                     var endOfArrowY = groupPrimaryState.y - totalAmplitude.imaginary() * config.maxRadius;
@@ -98,16 +98,16 @@
                         newStateComponent.y = endOfArrowY;
                         phases.phase3.push(newStateComponent);
                     }
-                };
+                }
 
                 keysGroupedByDestinationState.forEach(function (keyGroup) {
                     var groupPrimaryState = addAllAmplitudesToFirstStateComponent(keyGroup);
                     shrinkRemainingAmplitudes(groupPrimaryState, keyGroup);
                 });
                 
-            };
+            }
 
-            var createPhases1And2 = function (stateComponents, operation, phases, phase2bGroupedByState) {
+            function createPhases1And2(stateComponents, operation, phases, phase2bGroupedByState) {
                 stateComponents.forEach(function(oldStateComponent) {
                     var qstate = operation(jsqubits(oldStateComponent.bitString));
                     var phase1StateGroupIndexes = [];
@@ -125,21 +125,32 @@
                     });
                 });
                 return phases;
-            };
+            }
             
-            var createPhase4 = function (phases) {
+            function createPhase4(phases) {
                 phases.phase4 = phases.phase3.filter(function hasSignificantAmplitude(stateComponent) {
                     return stateComponent.amplitude.magnitude() > 0.0001;
                 });
-            };
+            }
             
-            var createPhase5 = function (phases) {
+            function createPhase5(phases) {
                 phases.phase5 = phases.phase4.map(function cloneWithZeroXOffset(stateComponent) {
                     var result = _.clone(stateComponent);
                     result.x = 0;
                     return result;
                 });
-            };
+            }
+            
+            function findComponentByIndex(stateComponents, index) {
+                var result = null;
+                stateComponents.some(function hasMatchingIndex(stateComponent) {
+                    if (stateComponent.numericIndex === index) {
+                        result = stateComponent;
+                        return true;
+                    }
+                });
+                return result;
+            }
 
             return {
                 yOffSetForState: yOffSetForState,
@@ -181,11 +192,26 @@
                     createPhase4(phases);
                     createPhase5(phases);
                     return phases;
+                },
+                
+                createIntermediateState: function (src, dest) {
+                    var result = _.clone(src);
+                    result.forEach(function adjustAmplitude(srcStateComponent) {
+                        var destStateComponent =
+                            findComponentByIndex(dest, srcStateComponent.numericIndex);
+                        if (destStateComponent && destStateComponent.amplitude.magnitude() > 0) {
+                            srcStateComponent.amplitude = destStateComponent.amplitude;
+                        } else {
+                            srcStateComponent.amplitude =
+                                srcStateComponent.amplitude.multiply(smallComplexWithZeroPhase);
+                        }
+                    });
+                    return result;
                 }
             };
-        };
+        }
         return calculatorFactory;
-    };
+    }
     
     /* Support AMD and CommonJS, with a fallback of using the global namespace */
     if (typeof define !== 'undefined' && define.amd) {

@@ -49,7 +49,8 @@
             class="quantumOpSpecification_checkboxLabel"></label>
         <input type="checkbox" id='control{{bitLabel}}'
             data-ng-model='controlBits[bitLabel]'
-            data-ng-disabled="controlBitsDisabled || targetBits[bitLabel]"/>
+            data-ng-disabled="controlBitsDisabled"
+            data-ng-change="onChangeControlBits()"/>
     </span>
 </div>
 <div class="quantumOpSpecification_item"
@@ -60,7 +61,8 @@
             class="quantumOpSpecification_checkboxLabel"></label>
         <input type="checkbox" id='target{{bitLabel}}'
             data-ng-model='targetBits[bitLabel]'
-            data-ng-disabled="targetBitsDisabled || controlBits[bitLabel]"/>
+            data-ng-disabled="targetBitsDisabled"
+            data-ng-change="onChangeTargetBits()"/>
     </span>
     <button type="button" data-ng-click='selectAllAsTargetBits()'>All</button>
 </div>

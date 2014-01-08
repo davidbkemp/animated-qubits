@@ -3,16 +3,16 @@
 (function (globals) {
     "use strict";
     
-    var createModule = function (_, Q, rendererFactory, calculatorFactory) {
+    function createModule(_, Q, rendererFactory, calculatorFactory) {
 
-        var ensureDependenciesAreSet = function () {
+        function ensureDependenciesAreSet() {
             _ = _ || globals._;
             Q = Q || globals.Q;
             rendererFactory = rendererFactory || globals.animatedQubitsInternal.rendererFactory;
             calculatorFactory = calculatorFactory || globals.animatedQubitsInternal.calculatorFactory;
-        };
+        }
     
-        return function (qstate, config) {
+        return function animatedQubits(qstate, config) {
             ensureDependenciesAreSet();
             var stateComponents,
                 numBits = qstate.numBits(),
@@ -20,11 +20,11 @@
                 calculator = calculatorFactory(config),
                 currentOperationPromise = Q.when();
 
-            var phase1 = function (newStateComponents) {
+            function phase1(newStateComponents) {
                 return renderer.renderState(newStateComponents, {duration: 0});
-            };
+            }
             
-            var phase2 = function (phases, newStateComponents) {
+            function phase2(phases, newStateComponents) {
                 return function () {
                     var promise = Q.when();
                     phases.stateComponentIndexesGroupedBySource.forEach(function(indexGroup) {
@@ -33,9 +33,9 @@
                     });
                     return promise;
                 };
-            };
+            }
             
-            var phase2a = function (phases, newStateComponents, indexGroup) {
+            function phase2a(phases, newStateComponents, indexGroup) {
                 return function () {
                     indexGroup.forEach(function(index) {
                         var key = newStateComponents[index].key;
@@ -43,9 +43,9 @@
                     });
                     return renderer.renderState(newStateComponents, {duration: 0});
                 };
-            };
+            }
             
-            var phase2b = function (phases, newStateComponents, indexGroup) {
+            function phase2b(phases, newStateComponents, indexGroup) {
                 return function () {
                     indexGroup.forEach(function(index) {
                         var key = newStateComponents[index].key;
@@ -53,21 +53,13 @@
                     });
                     return renderer.renderState(newStateComponents);
                 };
-            };
+            }
             
-            var phase3 = function name(phases) {
-                return renderer.renderState.bind(null, phases.phase3);
-            };
-            
-            var phase4 = function name(phases) {
-                return renderer.renderState.bind(null, phases.phase4, {duration: 0});
-            };
-            
-            var phase5 = function name(phases) {
-                return renderer.renderState.bind(null, phases.phase5);
-            };
-            
-            var applyOperation = function (operation, options) {
+            function createStateRendererFor(stateComponents, options) {
+                return renderer.renderState.bind(null, stateComponents, options);
+            }
+
+            function applyOperation(operation, options) {
                 var phases = calculator.createPhases(stateComponents, operation),
                     newStateComponents = phases.phase1.map(_.clone),
                     newQState = operation(qstate),
@@ -77,19 +69,36 @@
                 stateComponents = calculator.augmentState(qstate);
                 
                 if (options && options.skipInterferenceSteps) {
-                    phase5Promise = phase1(newStateComponents).then(phase5(phases));
+                    phase5Promise = phase1(newStateComponents)
+                        .then(createStateRendererFor(phases.phase5))
+                        .then(createStateRendererFor(stateComponents, {duration: 0}));
                 } else {
                     phase5Promise = phase1(newStateComponents)
                         .then(phase2(phases, newStateComponents))
-                        .then(phase3(phases))
-                        .then(phase4(phases))
-                        .then(phase5(phases));
+                        .then(createStateRendererFor(phases.phase3))
+                        .then(createStateRendererFor(phases.phase4, {duration: 0}))
+                        .then(createStateRendererFor(phases.phase5))
+                        .then(createStateRendererFor(stateComponents, {duration: 0}));
                 }
                 
                 return phase5Promise.then(function returnNewQState() {
                     return newQState;
                 });
-            };
+            }
+            
+            function measure(bits) {
+                var intermediateStateComponents, newStateComponents;
+                qstate = qstate.measure(bits).newState;
+                newStateComponents = calculator.augmentState(qstate);
+                intermediateStateComponents = calculator.createIntermediateState(stateComponents, newStateComponents);
+                stateComponents = newStateComponents;
+                return renderer.renderState(intermediateStateComponents)
+                    .then(function measurementPhase2() {
+                        return renderer.renderState(newStateComponents, {duration: 0});
+                    }).then(function returnNewQState() {
+                        return qstate;
+                    });
+            }
 
             return {
                 display: function (svgElement) {
@@ -112,10 +121,16 @@
                         return applyOperation(operation, options);
                     });
                     return currentOperationPromise;
+                },
+                measure: function (bits) {
+                    currentOperationPromise = currentOperationPromise.then(function () {
+                        return measure(bits);
+                    });
+                    return currentOperationPromise;
                 }
             };
         };
-    };
+    }
 
     /* Support AMD and CommonJS, with a fallback of putting animatedQubits in the global namespace */
     if (typeof define !== 'undefined' && define.amd) {

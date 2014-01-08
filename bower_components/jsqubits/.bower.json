@@ -4,7 +4,7 @@
     "lib/jsqubits.js",
     "lib/jsqubitsmath.js"
   ],
-  "version": "0.1.0",
+  "version": "0.2.0",
   "homepage": "http://davidbkemp.github.io/jsqubits/",
   "authors": [
     "David Kemp <davidbkemp@gmail.com>"
@@ -29,13 +29,13 @@
     "*.iml",
     "package.json"
   ],
-  "_release": "0.1.0",
+  "_release": "0.2.0",
   "_resolution": {
     "type": "version",
-    "tag": "v0.1.0",
-    "commit": "ef3c1728c3342ee20bd91d7b1b1cb7e3c764df05"
+    "tag": "v0.2.0",
+    "commit": "5cf0a8869a636e089bf2f886dc7db3d9842f489f"
   },
   "_source": "git://github.com/davidbkemp/jsqubits.git",
-  "_target": "~0.1.0",
+  "_target": "~0.2.0",
   "_originalSource": "jsqubits"
 }

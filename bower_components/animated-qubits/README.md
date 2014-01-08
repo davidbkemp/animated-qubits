@@ -2,8 +2,6 @@
 
 JavaScript library for animating quantum computations.
 
-Please let me know if you use this library, otherwise I might loose interest in enhancing it.
-
 Usage
 -----
 
@@ -29,7 +27,7 @@ Add an svg element to the page:
 
 Create a jsqubits object, pass it to the animatedQubits function to create an animatedQubits object, and ask it to display itself in the svg element (see also http://davidbkemp.github.io/jsqubits/ )
 
-    var qstate = jsqubits("|101>").hadamard(0).T(0);
+    var qstate = jsqubits("|101>").hadamard(0).t(0);
     var animation = animatedQubits(qstate, {maxRadius: 50});
     var svgElement = document.getElementById("mySvg");
     
