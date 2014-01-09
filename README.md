@@ -2,6 +2,8 @@
 
 JavaScript library for animating quantum computations.
 
+To see an example of it in use, see the Quantum Gate Playground: http://davidbkemp.github.io/quantum-gate-playground/
+
 Usage
 -----
 
