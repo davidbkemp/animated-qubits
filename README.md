@@ -58,19 +58,57 @@ Animate an operation
 
     animation.applyOperation(function hadamardAll(qstate) {
         return qstate.hadamard(jsqubits.ALL);
+    }).then(function onSuccess(newQState) {
+        // Invoked asynchronously when the animation successfully completes
     }).fail(function (msg) {
+        // Invoked asynchronously if an error occurs.
         alert(msg);
     });
 
+Measure qubits 0 and 2 (where qubit 0 is the least significant i.e. right-most qubit):
+
+    animation.measure([0, 2])
+        .then(function onSuccess(newQState) {
+        // Invoked asynchronously when the animation successfully completes
+    }).fail(function (msg) {
+        // Invoked asynchronously if an error occurs.
+        alert(msg);
+    });
+
+The applyOperation() and measure() methods return "promise" objects
+with then() and fail() methods that take callbacks that get invoked upon
+completion of the animation
+(See http://promises-aplus.github.io/promises-spec/ ).
+These promises will pass on the resultant QState object.
+See the examples to see how this can be used.
 
 Development
 -----------
 
-To run specs and validate the JavaScript:
+To run specs and validate the JavaScript and create animatedQubits.min.js:
 
-    npm test
+    npm run build
 
-To build animatedQubits.min.js:
+License
+-------
 
-    npm run-script build
+The MIT License (MIT)
 
+Copyright (c) 2013-2014 David Kemp
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

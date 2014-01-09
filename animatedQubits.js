@@ -145,5 +145,7 @@
         globals.animatedQubits = createModule();
     }
 
-
 })(this);
+
+// (c) 2012-2014 David Kemp
+// animated-qubits may be freely distributed under the MIT license.
