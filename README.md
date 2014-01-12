@@ -1,6 +1,6 @@
 # animatedQubits.js
 
-<img src="http://davidbkemp.github.io/animated-qubits/animated-qubits.png" style="float: right; padding: 1em; height: 12em">
+<img src="http://davidbkemp.github.io/animated-qubits/animated-qubits.png" height="180">
 
 JavaScript library for animating quantum computations.
 
