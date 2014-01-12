@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Animation of Grover&apos;s Quantum Search Algorithm</title>
+<link rel="stylesheet" href="quantumAnimation.css" />
+</head>
+
+<body>
+<h1>Animation of Grover&apos;s Quantum Search Algorithm</h1>
+
+<p>
+    This is an animation of Grover&apos;s Quantum Search Algorithm.
+    It finds x for which f(x)=1, assuming that f equals 0 for all other values.
+</p>
+<p>
+    In this example, we assume that x ranges from 0 to 7
+    and hence we need a 3 bit search space.
+    Our &quot;secret&quot; function f happens to satisfy f(x)=1 for x=2.
+    The algorithm requires 3 qubits for the search space plus one extra "worker" qubit
+    to make it possible to perform the required phase flips.
+    Here, the left 3 qubits make up the search space, and the right most bit is the worker qubit.
+</p>
+<p>
+    The initial state consists of "0001" followed by
+    the application of the Hadamard operator applied to of all the qubits.
+    This is what you should see displayed below before pressing "Run".
+    Given that f(x)=1 for the binary value "010",
+    the algorithm should significantly increase the magnitude of the amplitudes of "0100" and "0101".
+    It then just needs to measure the left 3 qubits and it has a high probability of finding
+    the required answer of "010".
+</p>
+<p>
+    The algorithm in this example is able to complete in 2 iterations where each iteration
+    consists of two steps:
+</p>
+
+<ul>
+    <li>
+        A bit flip of the worker (right most) qubit for the two states where f(x)=1.
+        You should see the amplitudes for "0100" and "0101" swap,
+        and notice that this effectively flips their phases.
+    </li>
+    <li>
+        A "reflection about the mean".
+        You should see the amplitudes of "0100" and "0101" increase
+        and everything else decrease.
+    </li>
+</ul>
+
+<div><button id="run" onclick="run()">Run</button></div>
+
+<div id="qstate">...</div>
+<svg id="groverSvg" style="border: 1px solid black"></svg>
+
+<script src="bower_components/animated-qubits/animatedQubits.min.js"></script>
+<script src="bower_components/d3/d3.min.js"></script>
+<script src="bower_components/d3-measure-text/lib/d3-measure-text.js"></script>
+<script src="bower_components/d3-transform/src/d3-transform.js"></script>
+<script src="bower_components/jsqubits/lib/jsqubits.js"></script>
+<script src="bower_components/q/q.js"></script>
+<script src="bower_components/lodash/dist/lodash.min.js"></script>
+<script src="bower_components/jquery/jquery.min.js"></script>
+
+<script src="grover.js"></script>
+
+<script src="browserSupportDetection.js"></script>
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46830069-1', 'davidbkemp.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
