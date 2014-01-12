@@ -2,12 +2,12 @@
 
 JavaScript library for animating quantum computations.
 
-To see an example of it in use, see the Quantum Gate Playground: http://davidbkemp.github.io/quantum-gate-playground/
+To see an example of it in use, see the [Quantum Gate Playground](http://davidbkemp.github.io/quantum-gate-playground/) and the [Animation of Grover's Quantum Search Algorithm](http://davidbkemp.github.io/animated-qubits/grover.html).
 
 Usage
 -----
 
-Include animatedQubits.min.js and its dependencies in your web page. Possibly the easiest way to do this is to use bower ( http://bower.io/ ):
+Include animatedQubits.min.js and its dependencies in your web page. Possibly the easiest way to do this is to use [bower](http://bower.io/):
 
     $ bower install animated-qubits
 
