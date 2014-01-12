@@ -1,5 +1,7 @@
 # animatedQubits.js
 
+<img align="right" src="http://davidbkemp.github.io/animated-qubits/animated-qubits.png">
+
 JavaScript library for animating quantum computations.
 
 To see an example of it in use, see the [Quantum Gate Playground](http://davidbkemp.github.io/quantum-gate-playground/) and the [Animation of Grover's Quantum Search Algorithm](http://davidbkemp.github.io/animated-qubits/grover.html).
