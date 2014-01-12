@@ -56,7 +56,7 @@ function run() {
     }
     
     function amplify() {
-        return applyOperation(phaseFlip)
+        return applyOperation(phaseFlip, {skipInterferenceSteps: true})
             .then(applyOperation.bind(null, reflectAboutMean));
     }
 
