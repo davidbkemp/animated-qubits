@@ -1,4 +1,5 @@
 lib-cov
+main.deps.js
 main.min.js
 *.seed
 *.log

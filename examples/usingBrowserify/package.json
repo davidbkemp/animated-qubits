@@ -6,15 +6,18 @@
   "private": true,
   "scripts": {
     "hint": "jshint --config jshintConfig.json js/main.js",
-    "build": "browserify js/main.js -o js/main.min.js"
+    "browserify": "browserify js/main.js -o js/main.deps.js",
+    "uglify": "uglifyjs js/main.deps.js -o js/main.min.js",
+    "build": "npm run hint && npm run browserify && npm run uglify"
   },
-  "author": "",
+  "author": "David Kemp",
   "license": "MIT",
   "dependencies": {
-    "animated-qubits": "../.."
+    "animated-qubits": "davidbkemp/animated-qubits"
   },
   "devDependencies": {
     "jshint": "~2.4.1",
-    "browserify": "~3.20.0"
+    "browserify": "~3.20.0",
+    "uglify-js": "~2.4.11"
   }
 }
