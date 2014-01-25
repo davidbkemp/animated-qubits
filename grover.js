@@ -1,7 +1,11 @@
-/* global animatedQubits, jsqubits, alert, setTimeout, Q, jQuery */
+/* global require, alert, setTimeout, jQuery */
 
-(function (globals) {
+(function () {
 "use strict";
+
+var animatedQubits = require("animated-qubits"),
+    jsqubits = require("jsqubits").jsqubits,
+    Q = require("q");
 
 var naturalDimensions,
     qstate,
@@ -88,13 +92,11 @@ function run() {
 
 }
 
-globals.run = function () {
-    run();
-};
-
 reset();
 naturalDimensions = animation.getNaturalDimensions();
 svgElement.attr("height", naturalDimensions.height);
 
-})(this);
+jQuery("#run").click(run);
+
+})();
 

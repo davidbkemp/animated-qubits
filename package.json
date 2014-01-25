@@ -1,10 +1,13 @@
 {
-  "name": "animated-qubits",
+  "name": "animated-qubits-gh-pages",
   "version": "0.0.0",
   "description": "animated-qubits home page",
   "main": "grover.js",
   "scripts": {
-    "hint": "jshint --config jshintConfig.json *.js"
+    "hint": "jshint --config jshintConfig.json grover.js browserSupportDetection.js",
+    "browserify": "browserify grover.js -o grover.deps.js",
+    "uglify": "uglifyjs grover.deps.js -o grover.min.js",
+    "build": "npm run hint && npm run browserify && npm run uglify"
   },
   "repository": {
     "type": "git",
@@ -12,7 +15,14 @@
   },
   "author": "",
   "license": "MIT",
+  "dependencies": {
+    "jsqubits": "~0.2.0",
+    "animated-qubits": "davidbkemp/animated-qubits",
+    "q": "~1.0.0"
+  },
   "devDependencies": {
-    "jshint": "~2.3.0"
+    "jshint": "~2.4.1",
+    "browserify": "~3.20.0",
+    "uglify-js": "~2.4.11"
   }
 }
