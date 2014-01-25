@@ -16,18 +16,10 @@ requirejs.config({
         d3Transform: bowerPath + 'd3-transform/src/d3-transform',
         q: bowerPath + 'q/q',
         lodash: bowerPath + 'lodash/dist/lodash.min'
-    },
-    shim: {
-        d3: {
-            exports: 'd3'
-        },
-        d3Transform: {
-            deps: ['d3']
-        }
     }
 });
 
-// Unfortunately, we have to force d3Transform to load here.
+// Unfortunately, we have to force d3Transform to load here as it does not support requirejs.
 requirejs(['animatedQubits', 'jsqubits', 'd3Transform'],
     function (animatedQubits, jsqubits) {
         var animation = animatedQubits(jsqubits("|101>"), {maxRadius: 50});
