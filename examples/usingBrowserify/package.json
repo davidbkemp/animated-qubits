@@ -13,7 +13,8 @@
   "author": "David Kemp",
   "license": "MIT",
   "dependencies": {
-    "animated-qubits": "davidbkemp/animated-qubits"
+    "animated-qubits": "davidbkemp/animated-qubits",
+    "jsqubits": "~0.2.0"
   },
   "devDependencies": {
     "jshint": "~2.4.1",
