@@ -5,6 +5,13 @@
   "version": "0.0.7",
   "repository": "git://github.com/davidbkemp/animated-qubits.git",
   "main": "animatedQubits.js",
+  "files": [
+    "LICENSE",
+    "animatedQubits.js",
+    "lib",
+    "README.md",
+    "package.json"
+  ],
   "scripts": {
     "test": "jshint --config jshintConfig.json animatedQubits.js lib spec examples/simpleImports/js examples/usingRequire/js && jasmine-node spec",
     "specOnly": "jasmine-node spec",
