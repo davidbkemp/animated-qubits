@@ -15,7 +15,7 @@
     "tests"
   ],
   "dependencies": {
-    "animated-qubits": "../..",
+    "animated-qubits": "davidbkemp/animated-qubits",
     "requirejs": "~2.1.x"
   }
 }
