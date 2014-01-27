@@ -17,3 +17,7 @@
     fill: red;
 }
 
+
+#qstate {
+    min-height: 3em;
+}
