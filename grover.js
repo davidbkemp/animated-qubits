@@ -15,7 +15,8 @@ var naturalDimensions,
     inputBits = {from: 1, to: numBits},
     requiredNumberOfAmplifications = Math.floor(Math.sqrt(range) * Math.PI / 4),
     qstateElement = jQuery("#qstate"),
-    svgElement = jQuery("#groverSvg");
+    svgElement = jQuery("#groverSvg"),
+    currentOperationPromise = Q.when();
 
 function functionToSolve(x) {return x === 2 ? 1 : 0;}
 
@@ -26,7 +27,7 @@ function reset() {
     animation = animatedQubits(qstate, {maxRadius: 50});
     qstateElement.text(qstate.toString());
     svgElement.empty();
-    animation.display(svgElement[0]);
+    return animation.display(svgElement[0]);
 }
 
 function sleepAndPassOnResult(millis) {
@@ -38,8 +39,7 @@ function sleepAndPassOnResult(millis) {
 }
 
 function run() {
-    var amplifications,
-        currentOperationPromise = Q.when();
+    var amplifications;
 
     function applyOperation(operation, options) {
         return animation.applyOperation(operation, options)
@@ -64,14 +64,13 @@ function run() {
             .then(applyOperation.bind(null, reflectAboutMean));
     }
 
-    reset();
+    currentOperationPromise = currentOperationPromise.then(reset);
 
     for (amplifications = 0; amplifications < requiredNumberOfAmplifications; amplifications++) {
         currentOperationPromise = currentOperationPromise.then(amplify);
     }
     
-    currentOperationPromise
-        .then(function measureState() {
+    currentOperationPromise = currentOperationPromise.then(function measureState() {
             return animation.measure(inputBits);
         })
         .then(sleepAndPassOnResult(1000))
@@ -80,23 +79,27 @@ function run() {
             qstateElement.text(qstate.toString());
             result = qstate.measure(inputBits).result;
             if (functionToSolve(result) === 1) {
-                alert("f(x) === 1 for x = " + result);
+                alert("f(x) = 1 for x = " + result);
             } else {
                 alert("Failed to find desired result. Will try again");
                 run();
             }
-        })
-        .fail(function error(msg) {
+        });
+        
+    return currentOperationPromise;
+}
+
+function onClick() {
+    run().fail(function error(msg) {
             alert(msg);
         });
-
 }
 
 reset();
 naturalDimensions = animation.getNaturalDimensions();
 svgElement.attr("height", naturalDimensions.height);
 
-jQuery("#run").click(run);
+jQuery("#run").click(onClick);
 
 })();
 

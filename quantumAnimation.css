@@ -1,7 +1,8 @@
-.animatedQubits {
+#groverSvg {
     border: 1px solid black;
     width: 32em;
     margin: 1em;
+    padding: 1em;
 }
 
 .animatedQubitsAmplitudeCircle {
