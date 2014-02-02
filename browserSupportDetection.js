@@ -11,11 +11,11 @@
     }
     
     function supportsES5() {
-        return [].forEach != null;
+        return [].forEach != null && Object.keys != null;
     }
     
     if (!supportsSvg() || !supportsES5()) {
-        alert("It seems that you browser does not support some features required by this site. Please try a more modern browser (eg. Google Chrome)");
+        alert("It seems that your browser does not support some features required by this site. Please try a more modern browser (eg. Google Chrome)");
     }
 
 })();
