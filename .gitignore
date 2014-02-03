@@ -1,4 +1,5 @@
 lib-cov
+*.deps.js
 *.seed
 *.log
 *.csv
