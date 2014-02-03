@@ -1,4 +1,4 @@
-/* global require, alert, setTimeout, jQuery */
+/* global require, alert, jQuery */
 
 (function () {
 "use strict";
@@ -15,6 +15,8 @@ var naturalDimensions,
     inputBits = {from: 1, to: numBits},
     requiredNumberOfAmplifications = Math.floor(Math.sqrt(range) * Math.PI / 4),
     qstateElement = jQuery("#qstate"),
+    statusElement = jQuery("#status"),
+    solutionElement = jQuery("#solution"),
     svgElement = jQuery("#groverSvg"),
     currentOperationPromise = Q.when();
 
@@ -28,14 +30,6 @@ function reset() {
     qstateElement.text(qstate.toString());
     svgElement.empty();
     return animation.display(svgElement[0]);
-}
-
-function sleepAndPassOnResult(millis) {
-    return function doSleepAndPassOnResult(result) {
-        var deferred = Q.defer();
-        setTimeout(deferred.resolve.bind(deferred, result), millis);
-        return deferred.promise;
-    };
 }
 
 function run() {
@@ -73,15 +67,15 @@ function run() {
     currentOperationPromise = currentOperationPromise.then(function measureState() {
             return animation.measure(inputBits);
         })
-        .then(sleepAndPassOnResult(1000))
         .then(function reportOnResult(qstate) {
             var result;
             qstateElement.text(qstate.toString());
             result = qstate.measure(inputBits).result;
             if (functionToSolve(result) === 1) {
-                alert("f(x) = 1 for x = " + result);
+                statusElement.text("Solved.");
+                solutionElement.text("f(x) = 1 for x = " + result);
             } else {
-                alert("Failed to find desired result. Will try again");
+                solutionElement.text("Failed. Retrying.");
                 run();
             }
         });
@@ -89,10 +83,16 @@ function run() {
     return currentOperationPromise;
 }
 
+function start() {
+    statusElement.text("Running");
+    solutionElement.text("");
+    return run();
+}
+
 function onClick() {
-    run().fail(function error(msg) {
-            alert(msg);
-        });
+    currentOperationPromise.then(start).fail(function error(msg) {
+        alert(msg);
+    });
 }
 
 reset();

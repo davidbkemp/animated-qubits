@@ -2,7 +2,7 @@
     border: 1px solid black;
     width: 32em;
     margin: 1em;
-    padding: 1em;
+    padding-left: 1em;
 }
 
 .animatedQubitsAmplitudeCircle {
@@ -18,7 +18,21 @@
     fill: red;
 }
 
+.animatedQubitsBitLabels {
+    display: none;
+}
 
 #qstate {
     min-height: 3em;
+}
+
+.animationArea {
+    position: relative;
+}
+
+#solution {
+    position: absolute;
+    top: 2em;
+    left: 7em;
+    font-size: 200%;
 }
