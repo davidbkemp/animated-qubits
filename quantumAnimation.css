@@ -1,7 +1,15 @@
+body {
+    margin: 1em;
+    max-width: 960px;
+}
+
+h1, h2 {
+    color: #25378B;
+}
+
 #groverSvg {
     border: 1px solid black;
     width: 32em;
-    margin: 1em;
     padding-left: 1em;
 }
 
@@ -26,8 +34,24 @@
     min-height: 3em;
 }
 
+.label {
+    font-weight: bold;
+}
+
+.dynamicSection {
+    padding: 1em;
+    border: 1px solid #999;
+}
+
 .animationArea {
     position: relative;
+}
+
+#run {
+    background-color: hsla(195, 53%, 60%, 0.5);
+    border-color: hsla(195, 53%, 60%, 0.5);
+    border-radius: 4px;
+    font-size: 100%;
 }
 
 #solution {
