@@ -14,7 +14,7 @@
   "license": "MIT",
   "dependencies": {
     "animated-qubits": "davidbkemp/animated-qubits",
-    "jsqubits": "~0.2.0"
+    "jsqubits": "~1.0.0"
   },
   "devDependencies": {
     "jshint": "~2.4.1",

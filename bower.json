@@ -1,7 +1,7 @@
 {
   "name": "animated-qubits",
   "main": "animatedQubits.js",
-  "version": "0.0.8",
+  "version": "1.0.0",
   "homepage": "https://github.com/davidbkemp/animated-qubits",
   "description": "quantum computation animation development library",
   "keywords": [
@@ -30,7 +30,7 @@
     "build.js"
   ],
   "dependencies": {
-    "jsqubits": "~0.2.0",
+    "jsqubits": "~1.0.0",
     "d3": "~3.4.1",
     "d3-measure-text": "0.0.2",
     "q": "~1.0.0",
