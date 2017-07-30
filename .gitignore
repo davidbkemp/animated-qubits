@@ -15,6 +15,6 @@ results
 
 node_modules
 
-app/*/test
-app/*/spec
-app/*/examples
+app/**/test
+app/**/spec
+app/**/examples

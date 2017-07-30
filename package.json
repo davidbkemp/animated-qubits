@@ -5,7 +5,7 @@
   "main": "grover.js",
   "scripts": {
     "hint": "jshint --config jshintConfig.json grover.js browserSupportDetection.js",
-    "bower": "bower install animated-qubits",
+    "bower": "bower install",
     "build": "npm run hint && npm run bower"
   },
   "repository": {

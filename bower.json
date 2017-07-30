@@ -15,6 +15,6 @@
     "tests"
   ],
   "dependencies": {
-    "animated-qubits": "davidbkemp/animated-qubits"
+    "animated-qubits": "~1.0.4"
   }
 }
