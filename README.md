@@ -6,6 +6,8 @@ JavaScript library for animating quantum computations.
 
 To see an example of it in use, see the [Quantum Gate Playground](http://davidbkemp.github.io/quantum-gate-playground/) and the [Animation of Grover's Quantum Search Algorithm](http://davidbkemp.github.io/animated-qubits/grover.html).
 
+You may also be interested in [An Interactive Introduction To Quantum Computing](http://davidbkemp.github.io/QuantumComputingArticle/) where I use animatedQubits to illustrate quantum computing concepts.
+
 Home page:  http://davidbkemp.github.io/animated-qubits
 
 Usage
