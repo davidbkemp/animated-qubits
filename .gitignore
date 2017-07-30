@@ -14,3 +14,7 @@ logs
 results
 
 node_modules
+
+app/*/test
+app/*/spec
+app/*/examples

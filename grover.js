@@ -1,11 +1,7 @@
-/* global require, alert, jQuery */
+/* global alert, jQuery, jsqubits, animatedQubits, Q */
 
 (function () {
 "use strict";
-
-var animatedQubits = require("animated-qubits"),
-    jsqubits = require("jsqubits").jsqubits,
-    Q = require("q");
 
 var naturalDimensions,
     qstate,
@@ -41,18 +37,18 @@ function run() {
                 qstateElement.text(qstate.toString());
             });
     }
-    
+
     function phaseFlip(qstate) {
         return qstate.applyFunction(inputBits, 0, functionToSolve);
     }
-    
+
     function reflectAboutMean(qstate) {
         return qstate
             .hadamard(inputBits)
             .applyFunction(inputBits, 0, function(x){return x === 0 ? 1 : 0;})
             .hadamard(inputBits);
     }
-    
+
     function amplify() {
         return applyOperation(phaseFlip, {skipInterferenceSteps: true})
             .then(applyOperation.bind(null, reflectAboutMean));
@@ -63,7 +59,7 @@ function run() {
     for (amplifications = 0; amplifications < requiredNumberOfAmplifications; amplifications++) {
         currentOperationPromise = currentOperationPromise.then(amplify);
     }
-    
+
     currentOperationPromise = currentOperationPromise.then(function measureState() {
             return animation.measure(inputBits);
         })
@@ -79,7 +75,7 @@ function run() {
                 run();
             }
         });
-        
+
     return currentOperationPromise;
 }
 
