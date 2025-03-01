@@ -4,13 +4,13 @@
 [![Build Status](https://travis-ci.org/davidbkemp/jsqubits.png)](https://travis-ci.org/davidbkemp/jsqubits)
 
 Website:
-http://davidbkemp.github.io/jsqubits/
+https://davidbkemp.github.io/jsqubits/
 
 The user manual:
-http://davidbkemp.github.io/jsqubits/jsqubitsManual.html
+https://davidbkemp.github.io/jsqubits/jsqubitsManual.html
 
 Try it out online using the jsqubits runner:
-http://davidbkemp.github.io/jsqubits/jsqubitsRunner.html
+https://davidbkemp.github.io/jsqubits/jsqubitsRunner.html
 
 Wiki (with examples):
 https://github.com/davidbkemp/jsqubits/wiki
@@ -33,20 +33,20 @@ You can use it to implement quantum algorithms using JavaScript like this:
 WARNING: jsqubits operators return new instances of the quantum state and they do NOT modify the existing object.
 
 If you are new to quantum programming, then it is highly recommended that you try reading
-[John Watrous' Quantum Information and Computation Lecture Notes](http://www.cs.uwaterloo.ca/~watrous/lecture-notes.html).
-You may also wish to try reading the (work in progress) [Introduction to Quantum Programming using jsqubits](http://davidbkemp.github.io/jsqubits/jsqubitsTutorial.html).
+[John Watrous' Quantum Information and Computation Lecture Notes](https://www.cs.uwaterloo.ca/~watrous/lecture-notes.html).
+You may also wish to try reading the (work in progress) [Introduction to Quantum Programming using jsqubits](https://davidbkemp.github.io/jsqubits/jsqubitsTutorial.html).
 
 Usage
 -----
 Try it out online using the jsqubits runner:
-http://davidbkemp.github.io/jsqubits/jsqubitsRunner.html
+https://davidbkemp.github.io/jsqubits/jsqubitsRunner.html
 
 Use it in your own web application by including the JavaScript files available from GitHub:
 https://github.com/davidbkemp/jsqubits/tree/master/lib
 (jsqubits.js is the core library, while jsqubitsmath.js has some maths functions that are useful in some of the well known quantum algorithms).
 They have optional support for being loaded via require.js (see the simple web page examples in the examples directory).
 
-Use it in a Node application (see http://nodejs.org) :
+Use it in a Node application (see https://nodejs.org) :
 
     $ npm install jsqubits
     $ node
@@ -57,7 +57,7 @@ REMEMBER: jsqubits operators return new instances of the quantum state and they 
 
 Development
 -----------
-To run the Jasmine specs, you will need to install Node.js (http://nodejs.org).
+To run the Jasmine specs, you will need to install Node.js (https://nodejs.org).
 Then use 'npm install' to install the testing dependencies (Jasmine) and 'npm test' to run the specs.
 NOTE: The Jasmine specs include an example of factoring using Shor's faction algorithm.  This is non-deterministic and can take a fraction of a second or several seconds to complete.
 

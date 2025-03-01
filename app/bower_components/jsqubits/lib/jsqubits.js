@@ -1,5 +1,5 @@
 //     jsqubits
-//     http://jsqubits.org
+//     https://jsqubits.org
 //     (c) 2012-2014 David Kemp
 //     jsqubits may be freely distributed under the MIT license.
 

@@ -1,17 +1,17 @@
 # animatedQubits.js
 
-<img src="http://davidbkemp.github.io/animated-qubits/animated-qubits.png" height="180">
+<img src="https://davidbkemp.github.io/animated-qubits/animated-qubits.png" height="180">
 
 JavaScript library for animating quantum computations.
 
-To see an example of it in use, see the [Quantum Gate Playground](http://davidbkemp.github.io/quantum-gate-playground/) and the [Animation of Grover's Quantum Search Algorithm](http://davidbkemp.github.io/animated-qubits/grover.html).
+To see an example of it in use, see the [Quantum Gate Playground](https://davidbkemp.github.io/quantum-gate-playground/) and the [Animation of Grover's Quantum Search Algorithm](https://davidbkemp.github.io/animated-qubits/grover.html).
 
-Home page:  http://davidbkemp.github.io/animated-qubits
+Home page:  https://davidbkemp.github.io/animated-qubits
 
 Usage
 -----
 
-Include animatedQubits.min.js and its dependencies in your web page. Possibly the easiest way to do this is to use [bower](http://bower.io/):
+Include animatedQubits.min.js and its dependencies in your web page. Possibly the easiest way to do this is to use [bower](https://bower.io/):
 
     $ bower install animated-qubits
 
@@ -31,7 +31,7 @@ Add an svg element to the page:
     <svg id="mySvg"></svg>
 
 
-Create a jsqubits object, pass it to the animatedQubits function to create an animatedQubits object, and ask it to display itself in the svg element (see also http://davidbkemp.github.io/jsqubits/ )
+Create a jsqubits object, pass it to the animatedQubits function to create an animatedQubits object, and ask it to display itself in the svg element (see also https://davidbkemp.github.io/jsqubits/ )
 
     var qstate = jsqubits("|101>").hadamard(0).t(0);
     var animation = animatedQubits(qstate, {maxRadius: 50});
@@ -84,7 +84,7 @@ Measure qubits 0 and 2 (where qubit 0 is the least significant i.e. right-most q
 The applyOperation() and measure() methods return "promise" objects
 with then() and fail() methods that take callbacks that get invoked upon
 completion of the animation
-(See http://promises-aplus.github.io/promises-spec/ ).
+(See https://promises-aplus.github.io/promises-spec/ ).
 These promises will pass on the resultant QState object.
 See the examples to see how this can be used.
 
