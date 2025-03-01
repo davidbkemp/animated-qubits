@@ -1,3 +1,5 @@
+![Status: Inactive](https://img.shields.io/badge/status-inactive-red)
+
 # animatedQubits.js
 
 <img src="https://davidbkemp.github.io/animated-qubits/animated-qubits.png" height="180">
